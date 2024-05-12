@@ -1,33 +1,41 @@
 <?php
 /****************************************************************************************
  * @package pXP
- * @file gen-Condominio.php
+ * @file gen-Unidades.php
  * @author  (admin)
- * @date 12-05-2024 03:10:00
+ * @date 12-05-2024 12:25:22
  * @description Archivo con la interfaz de usuario que permite la ejecucion de todas las funcionalidades del sistema
  *
  * HISTORIAL DE MODIFICACIONES:
  * #ISSUE                FECHA                AUTOR                DESCRIPCION
- * #0                12-05-2024 03:10:00    admin            Creacion
+ * #0                12-05-2024 12:25:22    admin            Creacion
  * #
  *******************************************************************************************/
 
 header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
-    Phx.vista.Condominio = Ext.extend(Phx.gridInterfaz, {
+    Phx.vista.Unidades = Ext.extend(Phx.gridInterfaz, {
 
             constructor: function (config) {
                 this.maestro = config.maestro;
                 //llama al constructor de la clase padre
-                Phx.vista.Condominio.superclass.constructor.call(this, config);
+                Phx.vista.Unidades.superclass.constructor.call(this, config);
                 this.init();
-                this.load({params: {start: 0, limit: this.tam_pag}})
             },
 
             Atributos: [
                 {
                     //configuracion del componente
+                    config: {
+                        labelSeparator: '',
+                        inputType: 'hidden',
+                        name: 'id_unidades'
+                    },
+                    type: 'Field',
+                    form: true
+                },
+                {
                     config: {
                         labelSeparator: '',
                         inputType: 'hidden',
@@ -38,87 +46,44 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 {
                     config: {
-                        name: 'codigo',
-                        fieldLabel: 'Codigo',
+                        name: 'numero_unidad',
+                        fieldLabel: 'Numero Unidad',
+                        allowBlank: false,
+                        anchor: '80%',
+                        gwidth: 150,
+                        maxLength: 20
+                    },
+                    type: 'TextField',
+                    filters: {pfiltro: 'uni.numero_unidad', type: 'string'},
+                    id_grupo: 1,
+                    grid: true,
+                    form: true
+                },
+                {
+                    config: {
+                        name: 'descripcion',
+                        fieldLabel: 'Descripcion',
                         allowBlank: true,
                         anchor: '80%',
-                        gwidth: 100
+                        gwidth: 200
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'con.codigo', type: 'string'},
+                    filters: {pfiltro: 'uni.descripcion', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: true
                 },
                 {
                     config: {
-                        name: 'nombre',
-                        fieldLabel: 'Nombre',
-                        allowBlank: false,
+                        name: 'tipo_unidad',
+                        fieldLabel: 'Tipo Unidad',
+                        allowBlank: true,
                         anchor: '80%',
-                        gwidth: 200,
-                        maxLength: 200
+                        gwidth: 100,
+                        maxLength: 50
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'con.nombre', type: 'string'},
-                    id_grupo: 1,
-                    grid: true,
-                    form: true
-                },
-                {
-                    config: {
-                        name: 'id_lugar',
-                        fieldLabel: 'Lugar',
-                        allowBlank: false,
-                        emptyText: 'Lugar...',
-                        store: new Ext.data.JsonStore(
-                            {
-                                url: '../../sis_parametros/control/Lugar/listarLugar',
-                                id: 'id_lugar',
-                                root: 'datos',
-                                sortInfo: {
-                                    field: 'nombre',
-                                    direction: 'ASC'
-                                },
-                                totalProperty: 'total',
-                                fields: ['id_lugar', 'id_lugar_fk', 'codigo', 'nombre', 'tipo', 'sw_municipio', 'sw_impuesto', 'codigo_largo'],
-                                // turn on remote sorting
-                                remoteSort: true,
-                                baseParams: {par_filtro: 'lug.nombre'}
-                            }),
-                        valueField: 'id_lugar',
-                        displayField: 'nombre',
-                        gdisplayField: 'desc_lugar',
-                        hiddenName: 'id_lugar',
-                        triggerAction: 'all',
-                        lazyRender: true,
-                        mode: 'remote',
-                        pageSize: 50,
-                        queryDelay: 500,
-                        anchor: "100%",
-                        gwidth: 150,
-                        minChars: 2,
-                        renderer: function (value, p, record) {
-                            return String.format('{0}', record.data['desc_lugar']);
-                        }
-                    },
-                    type: 'ComboBox',
-                    filters: {pfiltro: 'lug.nombre', type: 'string'},
-                    id_grupo: 0,
-                    grid: true,
-                    form: true
-                },
-                {
-                    config: {
-                        name: 'direccion',
-                        fieldLabel: 'Direccion',
-                        allowBlank: false,
-                        anchor: '80%',
-                        gwidth: 200,
-                        maxLength: 200
-                    },
-                    type: 'TextField',
-                    filters: {pfiltro: 'con.direccion', type: 'string'},
+                    filters: {pfiltro: 'uni.tipo_unidad', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: true
@@ -132,25 +97,10 @@ header("content-type: text/javascript; charset=UTF-8");
                         gwidth: 200
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'con.informacion_adicional', type: 'string'},
+                    filters: {pfiltro: 'uni.informacion_adicional', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: true
-                },
-                {
-                    config: {
-                        name: 'estado_reg',
-                        fieldLabel: 'Estado Reg.',
-                        allowBlank: true,
-                        anchor: '80%',
-                        gwidth: 100,
-                        maxLength: 10
-                    },
-                    type: 'TextField',
-                    filters: {pfiltro: 'con.estado_reg', type: 'string'},
-                    id_grupo: 1,
-                    grid: true,
-                    form: false
                 },
                 {
                     config: {
@@ -169,6 +119,21 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 {
                     config: {
+                        name: 'estado_reg',
+                        fieldLabel: 'Estado Reg.',
+                        allowBlank: true,
+                        anchor: '80%',
+                        gwidth: 100,
+                        maxLength: 10
+                    },
+                    type: 'TextField',
+                    filters: {pfiltro: 'uni.estado_reg', type: 'string'},
+                    id_grupo: 1,
+                    grid: true,
+                    form: false
+                },
+                {
+                    config: {
                         name: 'fecha_reg',
                         fieldLabel: 'Fecha creación',
                         allowBlank: true,
@@ -180,7 +145,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         }
                     },
                     type: 'DateField',
-                    filters: {pfiltro: 'con.fecha_reg', type: 'date'},
+                    filters: {pfiltro: 'uni.fecha_reg', type: 'date'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -195,7 +160,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 4
                     },
                     type: 'Field',
-                    filters: {pfiltro: 'con.id_usuario_ai', type: 'numeric'},
+                    filters: {pfiltro: 'uni.id_usuario_ai', type: 'numeric'},
                     id_grupo: 1,
                     grid: false,
                     form: false
@@ -210,7 +175,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 300
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'con.usuario_ai', type: 'string'},
+                    filters: {pfiltro: 'uni.usuario_ai', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -243,25 +208,25 @@ header("content-type: text/javascript; charset=UTF-8");
                         }
                     },
                     type: 'DateField',
-                    filters: {pfiltro: 'con.fecha_mod', type: 'date'},
+                    filters: {pfiltro: 'uni.fecha_mod', type: 'date'},
                     id_grupo: 1,
                     grid: true,
                     form: false
                 }
             ],
             tam_pag: 50,
-            title: 'Condominio',
-            ActSave: '../../sis_condominio/control/Condominio/insertarCondominio',
-            ActDel: '../../sis_condominio/control/Condominio/eliminarCondominio',
-            ActList: '../../sis_condominio/control/Condominio/listarCondominio',
-            id_store: 'id_condominio',
+            title: 'Unidades',
+            ActSave: '../../sis_condominio/control/Unidades/insertarUnidades',
+            ActDel: '../../sis_condominio/control/Unidades/eliminarUnidades',
+            ActList: '../../sis_condominio/control/Unidades/listarUnidades',
+            id_store: 'id_unidades',
             fields: [
-                {name: 'id_condominio', type: 'numeric'},
+                {name: 'id_unidades', type: 'numeric'},
                 {name: 'estado_reg', type: 'string'},
-                {name: 'id_lugar', type: 'numeric'},
-                {name: 'codigo', type: 'string'},
-                {name: 'nombre', type: 'string'},
-                {name: 'direccion', type: 'string'},
+                {name: 'id_condominio', type: 'numeric'},
+                {name: 'numero_unidad', type: 'string'},
+                {name: 'descripcion', type: 'string'},
+                {name: 'tipo_unidad', type: 'string'},
                 {name: 'informacion_adicional', type: 'string'},
                 {name: 'id_usuario_reg', type: 'numeric'},
                 {name: 'fecha_reg', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
@@ -271,41 +236,22 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name: 'fecha_mod', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
                 {name: 'usr_reg', type: 'string'},
                 {name: 'usr_mod', type: 'string'},
-                {name: 'desc_lugar', type: 'string'},
-
             ],
             sortInfo: {
-                field: 'id_condominio',
+                field: 'id_unidades',
                 direction: 'ASC'
             },
             bdel: true,
             bsave: false,
-            tabsouth: [
-                {
-                    url: '../../../sis_condominio/vista/unidades/Unidades.php',
-                    title: 'Unidades',
-                    height: '50%',
-                    cls: 'Unidades'
-                },
-                {
-                    url: '../../../sis_condominio/vista/areas_comunes/AreasComunes.php',
-                    title: 'Areas Comunes',
-                    height: '50%',
-                    cls: 'AreasComunes'
-                },
-                {
-                    url: '../../../sis_condominio/vista/areas_comunes/Estacionamiento.php',
-                    title: 'Parqueo',
-                    height: '50%',
-                    cls: 'Estacionamiento'
-                },
-                {
-                    url: '../../../sis_condominio/vista/baulera/Baulera.php',
-                    title: 'Baulera',
-                    height: '50%',
-                    cls: 'Baulera'
-                },
-            ],
+            onReloadPage: function (m) {
+                this.maestro = m;
+                this.store.baseParams = {id_condominio: this.maestro.id_condominio};
+                this.load({params: {start: 0, limit: 50}})
+            },
+            loadValoresIniciales: function () {
+                Phx.vista.Unidades.superclass.loadValoresIniciales.call(this);
+                this.Cmp.id_condominio.setValue(this.maestro.id_condominio);
+            },
         }
     )
 </script>
