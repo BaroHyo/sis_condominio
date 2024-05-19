@@ -16,8 +16,10 @@ class ACTEstacionamiento extends ACTbase{
             
     function listarEstacionamiento(){
 		$this->objParam->defecto('ordenacion','id_estacionamiento');
-
         $this->objParam->defecto('dir_ordenacion','asc');
+        if($this->objParam->getParametro('id_condominio') != '') {
+            $this->objParam->addFiltro("est.id_condominio = " . $this->objParam->getParametro('id_condominio'));
+        }
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
             $this->objReporte = new Reporte($this->objParam,$this);
             $this->res = $this->objReporte->generarReporteListado('MODEstacionamiento','listarEstacionamiento');
