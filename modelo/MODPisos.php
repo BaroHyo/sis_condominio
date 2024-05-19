@@ -1,18 +1,18 @@
 <?php
 /****************************************************************************************
  * @package pXP
- * @file gen-MODCondominio.php
+ * @file gen-MODPisos.php
  * @author  (admin)
- * @date 12-05-2024 03:10:00
+ * @date 12-05-2024 17:24:36
  * @description Clase que envia los parametros requeridos a la Base de datos para la ejecucion de las funciones, y que recibe la respuesta del resultado de la ejecucion de las mismas
  *
  * HISTORIAL DE MODIFICACIONES:
  * #ISSUE                FECHA                AUTOR                DESCRIPCION
- * #0                12-05-2024 03:10:00    admin             Creacion
+ * #0                12-05-2024 17:24:36    admin             Creacion
  * #
  *****************************************************************************************/
 
-class MODCondominio extends MODbase
+class MODPisos extends MODbase
 {
 
     function __construct(CTParametro $pParam)
@@ -20,21 +20,19 @@ class MODCondominio extends MODbase
         parent::__construct($pParam);
     }
 
-    function listarCondominio()
+    function listarPisos()
     {
         //Definicion de variables para ejecucion del procedimientp
-        $this->procedimiento = 'ate.ft_condominio_sel';
-        $this->transaccion = 'ATE_CON_SEL';
+        $this->procedimiento = 'ate.ft_pisos_sel';
+        $this->transaccion = 'ATE_PIS_SEL';
         $this->tipo_procedimiento = 'SEL';//tipo de transaccion
 
         //Definicion de la lista del resultado del query
-        $this->captura('id_condominio', 'int4');
+        $this->captura('id_pisos', 'int4');
         $this->captura('estado_reg', 'varchar');
-        $this->captura('id_lugar', 'int4');
-        $this->captura('codigo', 'varchar');
-        $this->captura('nombre', 'varchar');
-        $this->captura('direccion', 'varchar');
-        $this->captura('informacion_adicional', 'text');
+        $this->captura('id_bloques', 'int4');
+        $this->captura('id_condominio', 'int4');
+        $this->captura('numero_piso', 'int4');
         $this->captura('id_usuario_reg', 'int4');
         $this->captura('fecha_reg', 'timestamp');
         $this->captura('id_usuario_ai', 'int4');
@@ -43,8 +41,6 @@ class MODCondominio extends MODbase
         $this->captura('fecha_mod', 'timestamp');
         $this->captura('usr_reg', 'varchar');
         $this->captura('usr_mod', 'varchar');
-        $this->captura('desc_lugar', 'varchar');
-        $this->captura('bloques', 'varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -54,21 +50,18 @@ class MODCondominio extends MODbase
         return $this->respuesta;
     }
 
-    function insertarCondominio()
+    function insertarPisos()
     {
         //Definicion de variables para ejecucion del procedimiento
-        $this->procedimiento = 'ate.ft_condominio_ime';
-        $this->transaccion = 'ATE_CON_INS';
+        $this->procedimiento = 'ate.ft_pisos_ime';
+        $this->transaccion = 'ATE_PIS_INS';
         $this->tipo_procedimiento = 'IME';
 
         //Define los parametros para la funcion
         $this->setParametro('estado_reg', 'estado_reg', 'varchar');
-        $this->setParametro('id_lugar', 'id_lugar', 'int4');
-        $this->setParametro('codigo', 'codigo', 'varchar');
-        $this->setParametro('nombre', 'nombre', 'varchar');
-        $this->setParametro('direccion', 'direccion', 'varchar');
-        $this->setParametro('informacion_adicional', 'informacion_adicional', 'text');
-        $this->setParametro('bloques', 'bloques', 'varchar');
+        $this->setParametro('id_bloques', 'id_bloques', 'int4');
+        $this->setParametro('id_condominio', 'id_condominio', 'int4');
+        $this->setParametro('numero_piso', 'numero_piso', 'int4');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -78,22 +71,19 @@ class MODCondominio extends MODbase
         return $this->respuesta;
     }
 
-    function modificarCondominio()
+    function modificarPisos()
     {
         //Definicion de variables para ejecucion del procedimiento
-        $this->procedimiento = 'ate.ft_condominio_ime';
-        $this->transaccion = 'ATE_CON_MOD';
+        $this->procedimiento = 'ate.ft_pisos_ime';
+        $this->transaccion = 'ATE_PIS_MOD';
         $this->tipo_procedimiento = 'IME';
 
         //Define los parametros para la funcion
-        $this->setParametro('id_condominio', 'id_condominio', 'int4');
+        $this->setParametro('id_pisos', 'id_pisos', 'int4');
         $this->setParametro('estado_reg', 'estado_reg', 'varchar');
-        $this->setParametro('id_lugar', 'id_lugar', 'int4');
-        $this->setParametro('codigo', 'codigo', 'varchar');
-        $this->setParametro('nombre', 'nombre', 'varchar');
-        $this->setParametro('direccion', 'direccion', 'varchar');
-        $this->setParametro('informacion_adicional', 'informacion_adicional', 'text');
-        $this->setParametro('bloques', 'bloques', 'varchar');
+        $this->setParametro('id_bloques', 'id_bloques', 'int4');
+        $this->setParametro('id_condominio', 'id_condominio', 'int4');
+        $this->setParametro('numero_piso', 'numero_piso', 'int4');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -103,15 +93,15 @@ class MODCondominio extends MODbase
         return $this->respuesta;
     }
 
-    function eliminarCondominio()
+    function eliminarPisos()
     {
         //Definicion de variables para ejecucion del procedimiento
-        $this->procedimiento = 'ate.ft_condominio_ime';
-        $this->transaccion = 'ATE_CON_ELI';
+        $this->procedimiento = 'ate.ft_pisos_ime';
+        $this->transaccion = 'ATE_PIS_ELI';
         $this->tipo_procedimiento = 'IME';
 
         //Define los parametros para la funcion
-        $this->setParametro('id_condominio', 'id_condominio', 'int4');
+        $this->setParametro('id_pisos', 'id_pisos', 'int4');
 
         //Ejecuta la instruccion
         $this->armarConsulta();

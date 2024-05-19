@@ -1,33 +1,28 @@
 <?php
 /****************************************************************************************
  * @package pXP
- * @file gen-Estacionamiento.php
+ * @file gen-CargoDirectorio.php
  * @author  (admin)
- * @date 12-05-2024 14:10:39
+ * @date 15-05-2024 22:32:10
  * @description Archivo con la interfaz de usuario que permite la ejecucion de todas las funcionalidades del sistema
  *
  * HISTORIAL DE MODIFICACIONES:
  * #ISSUE                FECHA                AUTOR                DESCRIPCION
- * #0                12-05-2024 14:10:39    admin            Creacion
+ * #0                15-05-2024 22:32:10    admin            Creacion
  * #
  *******************************************************************************************/
 
 header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
-    Phx.vista.Estacionamiento = Ext.extend(Phx.gridInterfaz, {
+    Phx.vista.CargoDirectorio = Ext.extend(Phx.gridInterfaz, {
 
             constructor: function (config) {
                 this.maestro = config.maestro;
                 //llama al constructor de la clase padre
-                Phx.vista.Estacionamiento.superclass.constructor.call(this, config);
+                Phx.vista.CargoDirectorio.superclass.constructor.call(this, config);
                 this.init();
-                const dataPadre = Phx.CP.getPagina(this.idContenedorPadre).getSelectedData();
-                if (dataPadre) {
-                    this.onEnablePanel(this, dataPadre);
-                } else {
-                    this.bloquearMenus();
-                }
+                this.load({params: {start: 0, limit: this.tam_pag}})
             },
 
             Atributos: [
@@ -36,78 +31,22 @@ header("content-type: text/javascript; charset=UTF-8");
                     config: {
                         labelSeparator: '',
                         inputType: 'hidden',
-                        name: 'id_estacionamiento'
+                        name: 'id_cargo_directorio'
                     },
                     type: 'Field',
                     form: true
                 },
                 {
                     config: {
-                        labelSeparator: '',
-                        inputType: 'hidden',
-                        name: 'id_condominio'
-                    },
-                    type: 'Field',
-                    form: true
-                },
-                {
-                    config: {
-                        name: 'numero_espacio',
-                        fieldLabel: 'Numero Espacio',
+                        name: 'cargo',
+                        fieldLabel: 'Cargo',
                         allowBlank: false,
                         anchor: '80%',
-                        gwidth: 150,
-                        maxLength: 20
+                        gwidth: 200,
+                        maxLength: 100
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'est.numero_espacio', type: 'string'},
-                    id_grupo: 1,
-                    grid: true,
-                    form: true
-                },
-                {
-                    config: {
-                        name: 'tipo_espacion',
-                        fieldLabel: 'Tipo Espacion',
-                        allowBlank: false,
-                        emptyText: 'Tipo...',
-                        typeAhead: true,
-                        triggerAction: 'all',
-                        lazyRender: true,
-                        mode: 'local',
-                        anchor: '80%',
-                        gwidth: 100,
-                        store: [
-                            'Cubierto',
-                            'Aire Libre',
-                            'Discapacitados',
-                            'Visitantes',
-                            'Asignado',
-                            'Bicicletas',
-                            'Motos',
-                        ]
-                    },
-                    type: 'ComboBox',
-                    id_grupo: 0,
-                    filters: {pfiltro: 'est.tipo_espacion', type: 'string'},
-                    valorInicial: 'Asignado',
-                    form: true,
-                    grid: true,
-                },
-                {
-                    config: {
-                        name: 'informacion_adicional',
-                        fieldLabel: 'Informacion Adicional',
-                        allowBlank: true,
-                        anchor: '80%',
-                        gwidth: 100,
-                        renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-                            metaData.css = 'multilineColumn';
-                            return String.format('<div class="gridmultiline"><font>{0}</font></div>', value);//#4
-                        }
-                    },
-                    type: 'TextArea',
-                    filters: {pfiltro: 'est.informacion_adicional', type: 'string'},
+                    filters: {pfiltro: 'cad.cargo', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: true
@@ -122,7 +61,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 10
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'est.estado_reg', type: 'string'},
+                    filters: {pfiltro: 'cad.estado_reg', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -155,7 +94,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         }
                     },
                     type: 'DateField',
-                    filters: {pfiltro: 'est.fecha_reg', type: 'date'},
+                    filters: {pfiltro: 'cad.fecha_reg', type: 'date'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -170,7 +109,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 4
                     },
                     type: 'Field',
-                    filters: {pfiltro: 'est.id_usuario_ai', type: 'numeric'},
+                    filters: {pfiltro: 'cad.id_usuario_ai', type: 'numeric'},
                     id_grupo: 1,
                     grid: false,
                     form: false
@@ -185,7 +124,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 300
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'est.usuario_ai', type: 'string'},
+                    filters: {pfiltro: 'cad.usuario_ai', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -218,25 +157,22 @@ header("content-type: text/javascript; charset=UTF-8");
                         }
                     },
                     type: 'DateField',
-                    filters: {pfiltro: 'est.fecha_mod', type: 'date'},
+                    filters: {pfiltro: 'cad.fecha_mod', type: 'date'},
                     id_grupo: 1,
                     grid: true,
                     form: false
                 }
             ],
             tam_pag: 50,
-            title: 'Estacionamiento',
-            ActSave: '../../sis_condominio/control/Estacionamiento/insertarEstacionamiento',
-            ActDel: '../../sis_condominio/control/Estacionamiento/eliminarEstacionamiento',
-            ActList: '../../sis_condominio/control/Estacionamiento/listarEstacionamiento',
-            id_store: 'id_estacionamiento',
+            title: 'Cargo Directorio',
+            ActSave: '../../sis_condominio/control/CargoDirectorio/insertarCargoDirectorio',
+            ActDel: '../../sis_condominio/control/CargoDirectorio/eliminarCargoDirectorio',
+            ActList: '../../sis_condominio/control/CargoDirectorio/listarCargoDirectorio',
+            id_store: 'id_cargo_directorio',
             fields: [
-                {name: 'id_estacionamiento', type: 'numeric'},
+                {name: 'id_cargo_directorio', type: 'numeric'},
                 {name: 'estado_reg', type: 'string'},
-                {name: 'id_condominio', type: 'numeric'},
-                {name: 'numero_espacio', type: 'string'},
-                {name: 'tipo_espacion', type: 'string'},
-                {name: 'informacion_adicional', type: 'string'},
+                {name: 'cargo', type: 'string'},
                 {name: 'id_usuario_reg', type: 'numeric'},
                 {name: 'fecha_reg', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
                 {name: 'id_usuario_ai', type: 'numeric'},
@@ -248,20 +184,11 @@ header("content-type: text/javascript; charset=UTF-8");
 
             ],
             sortInfo: {
-                field: 'id_estacionamiento',
+                field: 'id_cargo_directorio',
                 direction: 'ASC'
             },
             bdel: true,
-            bsave: false,
-            onReloadPage: function (m) {
-                this.maestro = m;
-                this.store.baseParams = {id_condominio: this.maestro.id_condominio};
-                this.load({params: {start: 0, limit: 50}})
-            },
-            loadValoresIniciales: function () {
-                Phx.vista.Estacionamiento.superclass.loadValoresIniciales.call(this);
-                this.Cmp.id_condominio.setValue(this.maestro.id_condominio);
-            },
+            bsave: false
         }
     )
 </script>

@@ -16,14 +16,16 @@ class ACTBaulera extends ACTbase{
             
     function listarBaulera(){
 		$this->objParam->defecto('ordenacion','id_baulera');
-
         $this->objParam->defecto('dir_ordenacion','asc');
+        if($this->objParam->getParametro('id_condominio') != '') {
+            $this->objParam->addFiltro("bau.id_condominio = " . $this->objParam->getParametro('id_condominio'));
+        }
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
             $this->objReporte = new Reporte($this->objParam,$this);
             $this->res = $this->objReporte->generarReporteListado('MODBaulera','listarBaulera');
         } else{
         	$this->objFunc=$this->create('MODBaulera');
-            
+
         	$this->res=$this->objFunc->listarBaulera($this->objParam);
         }
         $this->res->imprimirRespuesta($this->res->generarJson());

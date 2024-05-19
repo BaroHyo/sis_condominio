@@ -16,8 +16,10 @@ class ACTAreasComunes extends ACTbase{
             
     function listarAreasComunes(){
 		$this->objParam->defecto('ordenacion','id_areas_comunes');
-
         $this->objParam->defecto('dir_ordenacion','asc');
+        if($this->objParam->getParametro('id_condominio') != '') {
+            $this->objParam->addFiltro("are.id_condominio = " . $this->objParam->getParametro('id_condominio'));
+        }
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
             $this->objReporte = new Reporte($this->objParam,$this);
             $this->res = $this->objReporte->generarReporteListado('MODAreasComunes','listarAreasComunes');

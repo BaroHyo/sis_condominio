@@ -1,33 +1,28 @@
 <?php
 /****************************************************************************************
  * @package pXP
- * @file gen-Unidades.php
+ * @file gen-Directorio.php
  * @author  (admin)
- * @date 12-05-2024 12:25:22
+ * @date 15-05-2024 22:33:12
  * @description Archivo con la interfaz de usuario que permite la ejecucion de todas las funcionalidades del sistema
  *
  * HISTORIAL DE MODIFICACIONES:
  * #ISSUE                FECHA                AUTOR                DESCRIPCION
- * #0                12-05-2024 12:25:22    admin            Creacion
+ * #0                15-05-2024 22:33:12    admin            Creacion
  * #
  *******************************************************************************************/
 
 header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
-    Phx.vista.Unidades = Ext.extend(Phx.gridInterfaz, {
+    Phx.vista.Directorio = Ext.extend(Phx.gridInterfaz, {
 
             constructor: function (config) {
-                this.maestro = config.maestro;
+                this.maestro = config;
                 //llama al constructor de la clase padre
-                Phx.vista.Unidades.superclass.constructor.call(this, config);
+                Phx.vista.Directorio.superclass.constructor.call(this, config);
                 this.init();
-                const dataPadre = Phx.CP.getPagina(this.idContenedorPadre).getSelectedData();
-                if (dataPadre) {
-                    this.onEnablePanel(this, dataPadre);
-                } else {
-                    this.bloquearMenus();
-                }
+                this.load({params: {start: 0, limit: this.tam_pag}})
             },
 
             Atributos: [
@@ -36,7 +31,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     config: {
                         labelSeparator: '',
                         inputType: 'hidden',
-                        name: 'id_unidades'
+                        name: 'id_directorio'
                     },
                     type: 'Field',
                     form: true
@@ -52,27 +47,27 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 {
                     config: {
-                        name: 'id_bloques',
-                        fieldLabel: 'Bloque',
+                        name: 'id_propietario',
+                        fieldLabel: 'Propietario',
                         allowBlank: false,
                         emptyText: 'Elija una opción...',
                         store: new Ext.data.JsonStore({
-                            url: '../../sis_condominio/control/Bloques/listarBloques',
-                            id: 'id_bloques',
+                            url: '../../sis_/control/Clase/Metodo',
+                            id: 'id_',
                             root: 'datos',
                             sortInfo: {
                                 field: 'nombre',
                                 direction: 'ASC'
                             },
                             totalProperty: 'total',
-                            fields: ['id_bloques', 'nombre',],
+                            fields: ['id_', 'nombre', 'codigo'],
                             remoteSort: true,
-                            baseParams: {par_filtro: 'blo.nombre'}
+                            baseParams: {par_filtro: 'movtip.nombre#movtip.codigo'}
                         }),
-                        valueField: 'id_bloques',
+                        valueField: 'id_',
                         displayField: 'nombre',
-                        gdisplayField: 'desc_bloque',
-                        hiddenName: 'id_bloques',
+                        gdisplayField: 'desc_',
+                        hiddenName: 'id_propietario',
                         forceSelection: true,
                         typeAhead: false,
                         triggerAction: 'all',
@@ -80,11 +75,11 @@ header("content-type: text/javascript; charset=UTF-8");
                         mode: 'remote',
                         pageSize: 15,
                         queryDelay: 1000,
-                        anchor: '80%',
-                        gwidth: 100,
+                        anchor: '100%',
+                        gwidth: 150,
                         minChars: 2,
                         renderer: function (value, p, record) {
-                            return String.format('<b>{0}</b>', record.data['desc_bloque']);
+                            return String.format('{0}', record.data['desc_']);
                         }
                     },
                     type: 'ComboBox',
@@ -95,27 +90,27 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 {
                     config: {
-                        name: 'id_pisos',
-                        fieldLabel: 'Piso',
+                        name: 'id_cargo_directorio',
+                        fieldLabel: 'Cargo Directorio',
                         allowBlank: false,
                         emptyText: 'Elija una opción...',
                         store: new Ext.data.JsonStore({
-                            url: '../../sis_condominio/control/Pisos/listarPisos',
-                            id: 'id_pisos',
+                            url: '../../sis_condominio/control/CargoDirectorio/listarCargoDirectorio',
+                            id: 'id_cargo_directorio',
                             root: 'datos',
                             sortInfo: {
-                                field: 'numero_piso',
+                                field: 'cargo',
                                 direction: 'ASC'
                             },
                             totalProperty: 'total',
-                            fields: ['id_pisos', 'numero_piso'],
+                            fields: ['id_cargo_directorio', 'cargo'],
                             remoteSort: true,
-                            baseParams: {par_filtro: 'pis.numero_piso'}
+                            baseParams: {par_filtro: 'dir.cargo'}
                         }),
-                        valueField: 'id_pisos',
-                        displayField: 'numero_piso',
-                        gdisplayField: 'desc_piso',
-                        hiddenName: 'id_pisos',
+                        valueField: 'id_cargo_directorio',
+                        displayField: 'cargo',
+                        gdisplayField: 'desc_',
+                        hiddenName: 'id_cargo_directorio',
                         forceSelection: true,
                         typeAhead: false,
                         triggerAction: 'all',
@@ -123,11 +118,11 @@ header("content-type: text/javascript; charset=UTF-8");
                         mode: 'remote',
                         pageSize: 15,
                         queryDelay: 1000,
-                        anchor: '80%',
-                        gwidth: 90,
+                        anchor: '100%',
+                        gwidth: 150,
                         minChars: 2,
                         renderer: function (value, p, record) {
-                            return String.format('<b style="color: darkblue">{0}</b>', record.data['desc_piso']);
+                            return String.format('{0}', record.data['desc_']);
                         }
                     },
                     type: 'ComboBox',
@@ -138,72 +133,66 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 {
                     config: {
-                        name: 'numero_unidad',
-                        fieldLabel: 'Numero Unidad',
+                        name: 'fecha_desde',
+                        fieldLabel: 'Fecha Desde',
                         allowBlank: false,
                         anchor: '80%',
                         gwidth: 100,
-                        maxLength: 20
+                        format: 'd/m/Y',
+                        renderer: function (value, p, record) {
+                            return value ? value.dateFormat('d/m/Y') : ''
+                        }
+                    },
+                    type: 'DateField',
+                    filters: {pfiltro: 'dir.fecha_desde', type: 'date'},
+                    id_grupo: 1,
+                    grid: true,
+                    form: true
+                },
+                {
+                    config: {
+                        name: 'fecha_hasta',
+                        fieldLabel: 'Fecha Hasta',
+                        allowBlank: false,
+                        anchor: '80%',
+                        gwidth: 100,
+                        format: 'd/m/Y',
+                        renderer: function (value, p, record) {
+                            return value ? value.dateFormat('d/m/Y') : ''
+                        }
+                    },
+                    type: 'DateField',
+                    filters: {pfiltro: 'dir.fecha_hasta', type: 'date'},
+                    id_grupo: 1,
+                    grid: true,
+                    form: true
+                },
+                {
+                    config: {
+                        name: 'estado_reg',
+                        fieldLabel: 'Estado Reg.',
+                        allowBlank: true,
+                        anchor: '80%',
+                        gwidth: 100,
+                        maxLength: 10
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'uni.numero_unidad', type: 'string'},
+                    filters: {pfiltro: 'dir.estado_reg', type: 'string'},
                     id_grupo: 1,
                     grid: true,
-                    form: true
+                    form: false
                 },
                 {
                     config: {
-                        name: 'tipo_unidad',
-                        fieldLabel: 'Tipo Unidad',
-                        allowBlank: false,
-                        emptyText: 'Tipo...',
-                        typeAhead: true,
-                        triggerAction: 'all',
-                        lazyRender: true,
-                        mode: 'local',
+                        name: 'estado',
+                        fieldLabel: 'estado',
+                        allowBlank: true,
                         anchor: '80%',
                         gwidth: 100,
-                        store: ['Residencial', 'Comercial', 'Mixto', 'Otros']
+                        maxLength: 100
                     },
-                    type: 'ComboBox',
-                    id_grupo: 0,
-                    filters: {pfiltro: 'uni.tipo_unidad', type: 'string'},
-                    valorInicial: 'Residencial',
-                    form: true,
-                    grid: true,
-                },
-                {
-                    config: {
-                        name: 'descripcion',
-                        fieldLabel: 'Descripcion',
-                        allowBlank: true,
-                        anchor: '80%',
-                        gwidth: 200,
-                        renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-                            metaData.css = 'multilineColumn';
-                            return String.format('<div class="gridmultiline"><font>{0}</font></div>', value);//#4
-                        }
-                    },
-                    type: 'TextArea',
-                    filters: {pfiltro: 'uni.descripcion', type: 'string'},
-                    id_grupo: 1,
-                    grid: true,
-                    form: true
-                },
-                {
-                    config: {
-                        name: 'informacion_adicional',
-                        fieldLabel: 'Informacion Adicional',
-                        allowBlank: true,
-                        anchor: '80%',
-                        gwidth: 200,
-                        renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-                            metaData.css = 'multilineColumn';
-                            return String.format('<div class="gridmultiline"><font>{0}</font></div>', value);//#4
-                        }
-                    },
-                    type: 'TextArea',
-                    filters: {pfiltro: 'uni.informacion_adicional', type: 'string'},
+                    type: 'TextField',
+                    filters: {pfiltro: 'dir.estado', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: true
@@ -225,21 +214,6 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 {
                     config: {
-                        name: 'estado_reg',
-                        fieldLabel: 'Estado Reg.',
-                        allowBlank: true,
-                        anchor: '80%',
-                        gwidth: 100,
-                        maxLength: 10
-                    },
-                    type: 'TextField',
-                    filters: {pfiltro: 'uni.estado_reg', type: 'string'},
-                    id_grupo: 1,
-                    grid: true,
-                    form: false
-                },
-                {
-                    config: {
                         name: 'fecha_reg',
                         fieldLabel: 'Fecha creación',
                         allowBlank: true,
@@ -251,7 +225,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         }
                     },
                     type: 'DateField',
-                    filters: {pfiltro: 'uni.fecha_reg', type: 'date'},
+                    filters: {pfiltro: 'dir.fecha_reg', type: 'date'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -266,7 +240,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 4
                     },
                     type: 'Field',
-                    filters: {pfiltro: 'uni.id_usuario_ai', type: 'numeric'},
+                    filters: {pfiltro: 'dir.id_usuario_ai', type: 'numeric'},
                     id_grupo: 1,
                     grid: false,
                     form: false
@@ -281,7 +255,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 300
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'uni.usuario_ai', type: 'string'},
+                    filters: {pfiltro: 'dir.usuario_ai', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -314,26 +288,27 @@ header("content-type: text/javascript; charset=UTF-8");
                         }
                     },
                     type: 'DateField',
-                    filters: {pfiltro: 'uni.fecha_mod', type: 'date'},
+                    filters: {pfiltro: 'dir.fecha_mod', type: 'date'},
                     id_grupo: 1,
                     grid: true,
                     form: false
                 }
             ],
             tam_pag: 50,
-            title: 'Unidades',
-            ActSave: '../../sis_condominio/control/Unidades/insertarUnidades',
-            ActDel: '../../sis_condominio/control/Unidades/eliminarUnidades',
-            ActList: '../../sis_condominio/control/Unidades/listarUnidades',
-            id_store: 'id_unidades',
+            title: 'Directorio',
+            ActSave: '../../sis_condominio/control/Directorio/insertarDirectorio',
+            ActDel: '../../sis_condominio/control/Directorio/eliminarDirectorio',
+            ActList: '../../sis_condominio/control/Directorio/listarDirectorio',
+            id_store: 'id_directorio',
             fields: [
-                {name: 'id_unidades', type: 'numeric'},
+                {name: 'id_directorio', type: 'numeric'},
                 {name: 'estado_reg', type: 'string'},
                 {name: 'id_condominio', type: 'numeric'},
-                {name: 'numero_unidad', type: 'string'},
-                {name: 'descripcion', type: 'string'},
-                {name: 'tipo_unidad', type: 'string'},
-                {name: 'informacion_adicional', type: 'string'},
+                {name: 'id_cargo_directorio', type: 'numeric'},
+                {name: 'id_propietario', type: 'numeric'},
+                {name: 'fecha_desde', type: 'date', dateFormat: 'Y-m-d'},
+                {name: 'fecha_hasta', type: 'date', dateFormat: 'Y-m-d'},
+                {name: 'estado', type: 'string'},
                 {name: 'id_usuario_reg', type: 'numeric'},
                 {name: 'fecha_reg', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
                 {name: 'id_usuario_ai', type: 'numeric'},
@@ -342,76 +317,18 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name: 'fecha_mod', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
                 {name: 'usr_reg', type: 'string'},
                 {name: 'usr_mod', type: 'string'},
-                {name: 'id_bloques', type: 'numeric'},
-                {name: 'id_pisos', type: 'numeric'},
-                {name: 'desc_bloque', type: 'string'},
-                {name: 'desc_piso', type: 'string'},
 
             ],
             sortInfo: {
-                field: 'id_unidades',
+                field: 'id_directorio',
                 direction: 'ASC'
             },
             bdel: true,
             bsave: false,
-            onReloadPage: function (m) {
-                this.maestro = m;
-                this.store.baseParams = {id_condominio: this.maestro.id_condominio};
-                if (this.maestro.bloques === 'no') {
-                    this.hideColumns(['desc_bloque']);
-                } else {
-                    this.showColumns(['desc_bloque']);
-                }
-                this.load({params: {start: 0, limit: 50}})
-            },
             loadValoresIniciales: function () {
-                Phx.vista.Unidades.superclass.loadValoresIniciales.call(this);
+                Phx.vista.Directorio.superclass.loadValoresIniciales.call(this);
                 this.Cmp.id_condominio.setValue(this.maestro.id_condominio);
             },
-            onButtonNew: function () {
-                Phx.vista.Unidades.superclass.onButtonNew.call(this);
-                if (this.maestro.bloques === 'si') {
-                    this.mostrarComponente(this.Cmp.id_bloques);
-                    this.Cmp.id_bloques.store.baseParams = Ext.apply(this.Cmp.id_bloques.store.baseParams, {id_condominio: this.maestro.id_condominio});
-                    this.Cmp.id_bloques.modificado = true;
-                    this.Cmp.id_bloques.on('select', function (combo, record, index) {
-                        this.Cmp.id_pisos.reset();
-                        this.Cmp.id_pisos.store.baseParams.id_bloques_cmb = record.data.id_bloques;
-                        this.Cmp.id_pisos.modificado = true;
-                    }, this);
-                } else {
-                    this.ocultarComponente(this.Cmp.id_bloques);
-                    this.Cmp.id_bloques.store.baseParams.id_condominio = null;
-                    this.Cmp.id_bloques.modificado = true;
-                    this.Cmp.id_pisos.store.baseParams.id_bloques_cmb = null;
-                    this.Cmp.id_pisos.modificado = true;
-                    this.Cmp.id_pisos.store.baseParams.id_condominio_cmb = this.maestro.id_condominio;
-                    this.Cmp.id_pisos.modificado = true;
-                }
-            },
-            onButtonEdit: function () {
-                Phx.vista.Unidades.superclass.onButtonEdit.call(this);
-            },
-            hideColumns: function (columnsToHide) {
-                const colModel = this.grid.getColumnModel();
-                columnsToHide.forEach(function (dataIndex) {
-                    const colIndex = colModel.findColumnIndex(dataIndex);
-                    if (colIndex !== -1) {
-                        colModel.setHidden(colIndex, true);
-                    }
-                });
-            },
-            showColumns: function (columnsToShow) {
-                const colModel = this.grid.getColumnModel();
-                columnsToShow.forEach(function (dataIndex) {
-                    const colIndex = colModel.findColumnIndex(dataIndex);
-                    if (colIndex !== -1) {
-                        colModel.setHidden(colIndex, false);
-                    }
-                });
-            }
-
-
         }
     )
 </script>

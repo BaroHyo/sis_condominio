@@ -22,6 +22,12 @@ header("content-type: text/javascript; charset=UTF-8");
                 //llama al constructor de la clase padre
                 Phx.vista.Baulera.superclass.constructor.call(this, config);
                 this.init();
+                const dataPadre = Phx.CP.getPagina(this.idContenedorPadre).getSelectedData();
+                if (dataPadre) {
+                    this.onEnablePanel(this, dataPadre);
+                } else {
+                    this.bloquearMenus();
+                }
             },
 
             Atributos: [
@@ -62,12 +68,16 @@ header("content-type: text/javascript; charset=UTF-8");
                 {
                     config: {
                         name: 'informacion_adicional',
-                        fieldLabel: 'informacion Adicional',
+                        fieldLabel: 'Informacion Adicional',
                         allowBlank: true,
                         anchor: '80%',
-                        gwidth: 200
+                        gwidth: 200,
+                        renderer: function (value, metaData, record, rowIndex, colIndex, store) {
+                            metaData.css = 'multilineColumn';
+                            return String.format('<div class="gridmultiline"><font>{0}</font></div>', value);//#4
+                        }
                     },
-                    type: 'TextField',
+                    type: 'TextArea',
                     filters: {pfiltro: 'bau.informacion_adicional', type: 'string'},
                     id_grupo: 1,
                     grid: true,
