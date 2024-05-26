@@ -71,7 +71,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         allowBlank: false,
                         emptyText: 'Elija una opción...',
                         store: new Ext.data.JsonStore({
-                            url: '../../sis_/control/Clase/Metodo',
+                            url: '../../sis_condominio/control/Especie/listarEspecie',
                             id: 'id_',
                             root: 'datos',
                             sortInfo: {
@@ -79,13 +79,13 @@ header("content-type: text/javascript; charset=UTF-8");
                                 direction: 'ASC'
                             },
                             totalProperty: 'total',
-                            fields: ['id_', 'nombre', 'codigo'],
+                            fields: ['id_especie', 'nombre',],
                             remoteSort: true,
-                            baseParams: {par_filtro: 'movtip.nombre#movtip.codigo'}
+                            baseParams: {par_filtro: 'esp.nombre'}
                         }),
-                        valueField: 'id_',
+                        valueField: 'id_especie',
                         displayField: 'nombre',
-                        gdisplayField: 'desc_',
+                        gdisplayField: 'desc_especie',
                         hiddenName: 'id_especie',
                         forceSelection: true,
                         typeAhead: false,
@@ -94,16 +94,16 @@ header("content-type: text/javascript; charset=UTF-8");
                         mode: 'remote',
                         pageSize: 15,
                         queryDelay: 1000,
-                        anchor: '100%',
+                        anchor: '80%',
                         gwidth: 150,
                         minChars: 2,
                         renderer: function (value, p, record) {
-                            return String.format('{0}', record.data['desc_']);
+                            return String.format('{0}', record.data['desc_especie']);
                         }
                     },
                     type: 'ComboBox',
                     id_grupo: 0,
-                    filters: {pfiltro: 'movtip.nombre', type: 'string'},
+                    filters: {pfiltro: 'esp.nombre', type: 'string'},
                     grid: true,
                     form: true
                 },
@@ -149,7 +149,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         fieldLabel: 'Informacion Adicional',
                         allowBlank: true,
                         anchor: '80%',
-                        gwidth: 100,
+                        gwidth: 200,
                         renderer: function (value, metaData, record, rowIndex, colIndex, store) {
                             metaData.css = 'multilineColumn';
                             return String.format('<div class="gridmultiline"><font>{0}</font></div>', value);//#4
@@ -296,6 +296,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name: 'fecha_mod', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
                 {name: 'usr_reg', type: 'string'},
                 {name: 'usr_mod', type: 'string'},
+                {name: 'desc_especie', type: 'string'},
 
             ],
             sortInfo: {

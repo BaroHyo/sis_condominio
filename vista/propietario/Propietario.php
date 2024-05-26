@@ -40,7 +40,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         anchor: '100%'
                     },
                     type: 'TextField',
-                    filters: {type: 'string'},
+                    filters: {pfiltro: 'p.nombre', type: 'string'},
                     bottom_filter: true,
                     id_grupo: 0,
                     grid: true,
@@ -246,6 +246,17 @@ header("content-type: text/javascript; charset=UTF-8");
         },
         validarFiltros: function () {
             return !!(this.cmbCondominio.validate());
+        },
+        onButtonNew: function () {
+            if (!this.validarFiltros()) {
+                alert('Especifique el Condominio antes.')
+            } else {
+                Phx.vista.Propietario.superclass.onButtonNew.call(this);
+                this.Cmp.id_condominio.setValue(this.cmbCondominio.getValue());
+            }
+        },
+        onButtonEdit: function () {
+            Phx.vista.Propietario.superclass.onButtonEdit.call(this);
         },
         tabsouth: [
             {

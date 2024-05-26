@@ -1,36 +1,37 @@
 <?php
 /****************************************************************************************
  * @package pXP
- * @file gen-SolicitudDetalle.php
+ * @file gen-Sancion.php
  * @author  (admin)
- * @date 15-05-2024 22:30:44
+ * @date 24-05-2024 04:17:23
  * @description Archivo con la interfaz de usuario que permite la ejecucion de todas las funcionalidades del sistema
  *
  * HISTORIAL DE MODIFICACIONES:
  * #ISSUE                FECHA                AUTOR                DESCRIPCION
- * #0                15-05-2024 22:30:44    admin            Creacion
+ * #0                24-05-2024 04:17:23    admin            Creacion
  * #
  *******************************************************************************************/
 
 header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
-    Phx.vista.SolicitudDetalle = Ext.extend(Phx.gridInterfaz, {
+    Phx.vista.Sancion = Ext.extend(Phx.gridInterfaz, {
 
             constructor: function (config) {
-                this.maestro = config.maestro;
-                //llama al constructor de la clase padre
-                Phx.vista.SolicitudDetalle.superclass.constructor.call(this, config);
+                this.idContenedor = config.idContenedor;
+                this.maestro = config;
+                Phx.vista.Sancion.superclass.constructor.call(this, config);
                 this.init();
+                this.store.baseParams = {id_condominio: this.maestro.id_condominio};
+                this.load({params: {start: 0, limit: this.tam_pag}})
             },
 
             Atributos: [
                 {
-                    //configuracion del componente
                     config: {
                         labelSeparator: '',
                         inputType: 'hidden',
-                        name: 'id_solicitud_detalle'
+                        name: 'id_sancion'
                     },
                     type: 'Field',
                     form: true
@@ -39,109 +40,86 @@ header("content-type: text/javascript; charset=UTF-8");
                     config: {
                         labelSeparator: '',
                         inputType: 'hidden',
-                        name: 'id_solicitud'
+                        name: 'id_condominio'
                     },
                     type: 'Field',
                     form: true
                 },
                 {
                     config: {
-                        name: 'id_areas_comunes',
-                        fieldLabel: 'Areas Comunes',
-                        allowBlank: false,
-                        emptyText: 'Elija una opción...',
-                        store: new Ext.data.JsonStore({
-                            url: '../../sis_/control/Clase/Metodo',
-                            id: 'id_',
-                            root: 'datos',
-                            sortInfo: {
-                                field: 'nombre',
-                                direction: 'ASC'
-                            },
-                            totalProperty: 'total',
-                            fields: ['id_', 'nombre', 'codigo'],
-                            remoteSort: true,
-                            baseParams: {par_filtro: 'movtip.nombre#movtip.codigo'}
-                        }),
-                        valueField: 'id_',
-                        displayField: 'nombre',
-                        gdisplayField: 'desc_',
-                        hiddenName: 'id_areas_comunes',
-                        forceSelection: true,
-                        typeAhead: false,
-                        triggerAction: 'all',
-                        lazyRender: true,
-                        mode: 'remote',
-                        pageSize: 15,
-                        queryDelay: 1000,
-                        anchor: '100%',
-                        gwidth: 150,
-                        minChars: 2,
-                        renderer: function (value, p, record) {
-                            return String.format('{0}', record.data['desc_']);
-                        }
-                    },
-                    type: 'ComboBox',
-                    id_grupo: 0,
-                    filters: {pfiltro: 'movtip.nombre', type: 'string'},
-                    grid: true,
-                    form: true
-                },
-                {
-                    config: {
-                        name: 'hr_desde',
-                        fieldLabel: 'Desde',
+                        name: 'nombre',
+                        fieldLabel: 'Nombre',
                         allowBlank: false,
                         anchor: '80%',
-                        gwidth: 100,
-                        maxLength: 8
+                        gwidth: 250,
+                        maxLength: 100
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'dts.hr_desde', type: 'string'},
+                    filters: {pfiltro: 'san.nombre', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: true
                 },
                 {
                     config: {
-                        name: 'hr_hasta',
-                        fieldLabel: 'Hasta',
-                        allowBlank: false,
-                        anchor: '80%',
-                        gwidth: 100,
-                        maxLength: 8
-                    },
-                    type: 'TextField',
-                    filters: {pfiltro: 'dts.hr_hasta', type: 'string'},
-                    id_grupo: 1,
-                    grid: true,
-                    form: true
-                },
-                {
-                    config: {
-                        name: 'importer',
+                        name: 'importe_mb',
                         fieldLabel: 'Importe',
                         allowBlank: true,
-                        anchor: '80%',
+                        anchor: '50%',
                         gwidth: 100,
+                        renderer: function (value, p, record) {
+                            Number.prototype.formatDinero = function (c, d, t) {
+                                var n = this,
+                                    c = isNaN(c = Math.abs(c)) ? 2 : c,
+                                    d = d == undefined ? "." : d,
+                                    t = t == undefined ? "," : t,
+                                    s = n < 0 ? "-" : "",
+                                    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+                                    j = (j = i.length) > 3 ? j % 3 : 0;
+                                return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+                            };
+                            return String.format('<div style="vertical-align:middle;text-align:right;"><b>{0}</b></div>', (parseFloat(value)).formatDinero(2, ',', '.'));
+
+                        }
                     },
                     type: 'NumberField',
-                    filters: {pfiltro: 'dts.importer', type: 'numeric'},
+                    filters: {pfiltro: 'san.importe_mb', type: 'numeric'},
                     id_grupo: 1,
                     grid: true,
                     form: true
                 },
                 {
                     config: {
-                        name: 'justificativo',
-                        fieldLabel: 'justificativo',
+                        name: 'id_moneda',
+                        origen: 'MONEDA',
+                        fieldLabel: 'Moneda',
+                        anchor: '70%',
                         allowBlank: false,
-                        anchor: '80%',
-                        gwidth: 100,
-                        maxLength: -5
+                        gdisplayField: 'desc_moneda',//mapea al store del grid
+                        gwidth: 200,
+                        renderer: function (value, p, record) {
+                            return String.format('{0}', record.data['desc_moneda']);
+                        }
                     },
-                    type: 'TextField',
-                    filters: {pfiltro: 'dts.justificativo', type: 'string'},
+                    type: 'ComboRec',
+                    id_grupo: 1,
+                    grid: true,
+                    form: true
+                },
+                {
+                    config: {
+                        name: 'informacion_adicional',
+                        fieldLabel: 'Informacion Adicional',
+                        allowBlank: true,
+                        anchor: '80%',
+                        gwidth: 250,
+                        renderer: function (value, metaData, record, rowIndex, colIndex, store) {
+                            metaData.css = 'multilineColumn';
+                            return String.format('<div class="gridmultiline"><font>{0}</font></div>', value);//#4
+                        }
+                    },
+                    type: 'TextArea',
+                    filters: {pfiltro: 'san.informacion_adicional', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: true
@@ -156,7 +134,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 10
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'dts.estado_reg', type: 'string'},
+                    filters: {pfiltro: 'san.estado_reg', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -176,6 +154,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     grid: true,
                     form: false
                 },
+
                 {
                     config: {
                         name: 'fecha_reg',
@@ -189,7 +168,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         }
                     },
                     type: 'DateField',
-                    filters: {pfiltro: 'dts.fecha_reg', type: 'date'},
+                    filters: {pfiltro: 'san.fecha_reg', type: 'date'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -204,7 +183,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 4
                     },
                     type: 'Field',
-                    filters: {pfiltro: 'dts.id_usuario_ai', type: 'numeric'},
+                    filters: {pfiltro: 'san.id_usuario_ai', type: 'numeric'},
                     id_grupo: 1,
                     grid: false,
                     form: false
@@ -219,7 +198,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 300
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'dts.usuario_ai', type: 'string'},
+                    filters: {pfiltro: 'san.usuario_ai', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -252,27 +231,26 @@ header("content-type: text/javascript; charset=UTF-8");
                         }
                     },
                     type: 'DateField',
-                    filters: {pfiltro: 'dts.fecha_mod', type: 'date'},
+                    filters: {pfiltro: 'san.fecha_mod', type: 'date'},
                     id_grupo: 1,
                     grid: true,
                     form: false
                 }
             ],
             tam_pag: 50,
-            title: 'Solicitud Detalle',
-            ActSave: '../../sis_condominio/control/SolicitudDetalle/insertarSolicitudDetalle',
-            ActDel: '../../sis_condominio/control/SolicitudDetalle/eliminarSolicitudDetalle',
-            ActList: '../../sis_condominio/control/SolicitudDetalle/listarSolicitudDetalle',
-            id_store: 'id_solicitud_detalle',
+            title: 'Sanción',
+            ActSave: '../../sis_condominio/control/Sancion/insertarSancion',
+            ActDel: '../../sis_condominio/control/Sancion/eliminarSancion',
+            ActList: '../../sis_condominio/control/Sancion/listarSancion',
+            id_store: 'id_sancion',
             fields: [
-                {name: 'id_solicitud_detalle', type: 'numeric'},
+                {name: 'id_sancion', type: 'numeric'},
                 {name: 'estado_reg', type: 'string'},
-                {name: 'id_solicitud', type: 'numeric'},
-                {name: 'id_areas_comunes', type: 'numeric'},
-                {name: 'hr_desde', type: 'string'},
-                {name: 'hr_hasta', type: 'string'},
-                {name: 'importer', type: 'numeric'},
-                {name: 'justificativo', type: 'string'},
+                {name: 'id_condominio', type: 'numeric'},
+                {name: 'id_moneda', type: 'numeric'},
+                {name: 'nombre', type: 'string'},
+                {name: 'importe_mb', type: 'numeric'},
+                {name: 'informacion_adicional', type: 'string'},
                 {name: 'id_usuario_reg', type: 'numeric'},
                 {name: 'fecha_reg', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
                 {name: 'id_usuario_ai', type: 'numeric'},
@@ -281,22 +259,19 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name: 'fecha_mod', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
                 {name: 'usr_reg', type: 'string'},
                 {name: 'usr_mod', type: 'string'},
-
+                {name: 'desc_moneda', type: 'string'},
             ],
             sortInfo: {
-                field: 'id_solicitud_detalle',
+                field: 'id_sancion',
                 direction: 'ASC'
             },
             bdel: true,
             bsave: false,
-            onReloadPage: function (m) {
-                this.maestro = m;
-                this.store.baseParams = {id_solicitud: this.maestro.id_solicitud};
-                this.load({params: {start: 0, limit: 50}})
-            },
+            fwidth: '60%',
+            fheight: '25%',
             loadValoresIniciales: function () {
-                Phx.vista.SolicitudDetalle.superclass.loadValoresIniciales.call(this);
-                this.Cmp.id_solicitud.setValue(this.maestro.id_solicitud);
+                Phx.vista.Sancion.superclass.loadValoresIniciales.call(this);
+                this.Cmp.id_condominio.setValue(this.maestro.id_condominio);
             },
         }
     )

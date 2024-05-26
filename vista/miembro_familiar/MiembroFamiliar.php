@@ -57,21 +57,21 @@ header("content-type: text/javascript; charset=UTF-8");
                         allowBlank: false,
                         emptyText: 'Elija una opción...',
                         store: new Ext.data.JsonStore({
-                            url: '../../sis_/control/Clase/Metodo',
-                            id: 'id_',
+                            url: '../../sis_condominio/control/TipoRelacion/listarTipoRelacion',
+                            id: 'id_tipo_relacion',
                             root: 'datos',
                             sortInfo: {
-                                field: 'nombre',
+                                field: 'tipo',
                                 direction: 'ASC'
                             },
                             totalProperty: 'total',
-                            fields: ['id_', 'nombre', 'codigo'],
+                            fields: ['id_tipo_relacion', 'tipo'],
                             remoteSort: true,
-                            baseParams: {par_filtro: 'movtip.nombre#movtip.codigo'}
+                            baseParams: {par_filtro: 'tip.tipo'}
                         }),
-                        valueField: 'id_',
-                        displayField: 'nombre',
-                        gdisplayField: 'desc_',
+                        valueField: 'id_tipo_relacion',
+                        displayField: 'tipo',
+                        gdisplayField: 'desc_tipo',
                         hiddenName: 'id_tipo_relacion',
                         forceSelection: true,
                         typeAhead: false,
@@ -84,12 +84,12 @@ header("content-type: text/javascript; charset=UTF-8");
                         gwidth: 150,
                         minChars: 2,
                         renderer: function (value, p, record) {
-                            return String.format('{0}', record.data['desc_']);
+                            return String.format('{0}', record.data['desc_tipo']);
                         }
                     },
                     type: 'ComboBox',
                     id_grupo: 0,
-                    filters: {pfiltro: 'movtip.nombre', type: 'string'},
+                    filters: {pfiltro: 'tip.tipo', type: 'string'},
                     grid: true,
                     form: true
                 },
@@ -291,7 +291,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name: 'fecha_mod', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
                 {name: 'usr_reg', type: 'string'},
                 {name: 'usr_mod', type: 'string'},
-
+                {name: 'desc_tipo', type: 'string'},
             ],
             sortInfo: {
                 field: 'id_vehiculo',

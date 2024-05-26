@@ -1,67 +1,93 @@
 <?php
 /****************************************************************************************
-*@package pXP
-*@file gen-MODPropietario.php
-*@author  (admin)
-*@date 14-05-2024 15:32:39
-*@description Clase que envia los parametros requeridos a la Base de datos para la ejecucion de las funciones, y que recibe la respuesta del resultado de la ejecucion de las mismas
+ * @package pXP
+ * @file gen-MODPropietario.php
+ * @author  (admin)
+ * @date 14-05-2024 15:32:39
+ * @description Clase que envia los parametros requeridos a la Base de datos para la ejecucion de las funciones, y que recibe la respuesta del resultado de la ejecucion de las mismas
+ *
+ * HISTORIAL DE MODIFICACIONES:
+ * #ISSUE                FECHA                AUTOR                DESCRIPCION
+ * #0                14-05-2024 15:32:39    admin             Creacion
+ * #
+ *****************************************************************************************/
 
- HISTORIAL DE MODIFICACIONES:
- #ISSUE                FECHA                AUTOR                DESCRIPCION
-  #0                14-05-2024 15:32:39    admin             Creacion    
-  #
-*****************************************************************************************/
+class MODPropietario extends MODbase
+{
 
-class MODPropietario extends MODbase{
-    
-    function __construct(CTParametro $pParam){
+    function __construct(CTParametro $pParam)
+    {
         parent::__construct($pParam);
     }
-            
-    function listarPropietario(){
+
+    function listarPropietario()
+    {
         //Definicion de variables para ejecucion del procedimientp
-        $this->procedimiento='ate.ft_propietario_sel';
-        $this->transaccion='ATE_PRO_SEL';
-        $this->tipo_procedimiento='SEL';//tipo de transaccion
-                
+        $this->procedimiento = 'ate.ft_propietario_sel';
+        $this->transaccion = 'ATE_PRO_SEL';
+        $this->tipo_procedimiento = 'SEL';//tipo de transaccion
+
         //Definicion de la lista del resultado del query
-		$this->captura('id_propietario','int4');
-		$this->captura('estado_reg','varchar');
-		$this->captura('id_persona','int4');
-		$this->captura('id_condominio','int4');
-		$this->captura('codigo','varchar');
-		$this->captura('fecha_desde','date');
-		$this->captura('fecha_hasta','date');
-		$this->captura('id_usuario_reg','int4');
-		$this->captura('fecha_reg','timestamp');
-		$this->captura('id_usuario_ai','int4');
-		$this->captura('usuario_ai','varchar');
-		$this->captura('id_usuario_mod','int4');
-		$this->captura('fecha_mod','timestamp');
-		$this->captura('usr_reg','varchar');
-        $this->captura('usr_mod','varchar');
-        
+        $this->captura('id_propietario', 'int4');
+        $this->captura('estado_reg', 'varchar');
+        $this->captura('id_persona', 'int4');
+        $this->captura('id_condominio', 'int4');
+        $this->captura('codigo', 'varchar');
+        $this->captura('fecha_desde', 'date');
+        $this->captura('fecha_hasta', 'date');
+        $this->captura('id_usuario_reg', 'int4');
+        $this->captura('fecha_reg', 'timestamp');
+        $this->captura('id_usuario_ai', 'int4');
+        $this->captura('usuario_ai', 'varchar');
+        $this->captura('id_usuario_mod', 'int4');
+        $this->captura('fecha_mod', 'timestamp');
+        $this->captura('usr_reg', 'varchar');
+        $this->captura('usr_mod', 'varchar');
+        $this->captura('nombre', 'varchar');
+        $this->captura('ap_materno', 'varchar');
+        $this->captura('ap_paterno', 'varchar');
+        $this->captura('ci', 'varchar');
+        $this->captura('tipo_documento', 'varchar');
+        $this->captura('expedicion', 'varchar');
+        $this->captura('fecha_nacimiento', 'date');
+        $this->captura('genero', 'varchar');
+        $this->captura('cualidad_1', 'varchar');
+        $this->captura('cualidad_2', 'varchar');
+
         //Ejecuta la instruccion
         $this->armarConsulta();
         $this->ejecutarConsulta();
-        
+
         //Devuelve la respuesta
         return $this->respuesta;
     }
-            
-    function insertarPropietario(){
+
+    function insertarPropietario()
+    {
         //Definicion de variables para ejecucion del procedimiento
-        $this->procedimiento='ate.ft_propietario_ime';
-        $this->transaccion='ATE_PRO_INS';
-        $this->tipo_procedimiento='IME';
-                
+        $this->procedimiento = 'ate.ft_propietario_ime';
+        $this->transaccion = 'ATE_PRO_INS';
+        $this->tipo_procedimiento = 'IME';
+
         //Define los parametros para la funcion
-		$this->setParametro('estado_reg','estado_reg','varchar');
-		$this->setParametro('id_persona','id_persona','int4');
-		$this->setParametro('id_condominio','id_condominio','int4');
-		$this->setParametro('codigo','codigo','varchar');
-		$this->setParametro('fecha_desde','fecha_desde','date');
-		$this->setParametro('fecha_hasta','fecha_hasta','date');
+        $this->setParametro('estado_reg', 'estado_reg', 'varchar');
+        $this->setParametro('id_persona', 'id_persona', 'int4');
+        $this->setParametro('id_condominio', 'id_condominio', 'int4');
+
+        $this->setParametro('nombre', 'nombre', 'varchar');
+        $this->setParametro('ap_materno', 'ap_materno', 'varchar');
+        $this->setParametro('ap_paterno', 'ap_paterno', 'varchar');
+        $this->setParametro('fecha_nacimiento', 'fecha_nacimiento', 'date');
+        $this->setParametro('genero', 'genero', 'varchar');
+        $this->setParametro('cualidad_1', 'cualidad_1', 'varchar');
+        $this->setParametro('cualidad_2', 'cualidad_2', 'varchar');
+        $this->setParametro('tipo_documento', 'tipo_documento', 'varchar');
+        $this->setParametro('ci', 'ci', 'varchar');
+        $this->setParametro('expedicion', 'expedicion', 'varchar');
+
+        $this->setParametro('codigo', 'codigo', 'varchar');
+        $this->setParametro('fecha_desde', 'fecha_desde', 'date');
+        $this->setParametro('fecha_hasta', 'fecha_hasta', 'date');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -70,21 +96,32 @@ class MODPropietario extends MODbase{
         //Devuelve la respuesta
         return $this->respuesta;
     }
-            
-    function modificarPropietario(){
+
+    function modificarPropietario()
+    {
         //Definicion de variables para ejecucion del procedimiento
-        $this->procedimiento='ate.ft_propietario_ime';
-        $this->transaccion='ATE_PRO_MOD';
-        $this->tipo_procedimiento='IME';
-                
+        $this->procedimiento = 'ate.ft_propietario_ime';
+        $this->transaccion = 'ATE_PRO_MOD';
+        $this->tipo_procedimiento = 'IME';
+
         //Define los parametros para la funcion
-		$this->setParametro('id_propietario','id_propietario','int4');
-		$this->setParametro('estado_reg','estado_reg','varchar');
-		$this->setParametro('id_persona','id_persona','int4');
-		$this->setParametro('id_condominio','id_condominio','int4');
-		$this->setParametro('codigo','codigo','varchar');
-		$this->setParametro('fecha_desde','fecha_desde','date');
-		$this->setParametro('fecha_hasta','fecha_hasta','date');
+        $this->setParametro('id_propietario', 'id_propietario', 'int4');
+        $this->setParametro('estado_reg', 'estado_reg', 'varchar');
+        $this->setParametro('id_persona', 'id_persona', 'int4');
+        $this->setParametro('id_condominio', 'id_condominio', 'int4');
+        $this->setParametro('nombre', 'nombre', 'varchar');
+        $this->setParametro('ap_materno', 'ap_materno', 'varchar');
+        $this->setParametro('ap_paterno', 'ap_paterno', 'varchar');
+        $this->setParametro('fecha_nacimiento', 'fecha_nacimiento', 'date');
+        $this->setParametro('genero', 'genero', 'varchar');
+        $this->setParametro('cualidad_1', 'cualidad_1', 'varchar');
+        $this->setParametro('cualidad_2', 'cualidad_2', 'varchar');
+        $this->setParametro('tipo_documento', 'tipo_documento', 'varchar');
+        $this->setParametro('ci', 'ci', 'varchar');
+        $this->setParametro('expedicion', 'expedicion', 'varchar');
+        $this->setParametro('codigo', 'codigo', 'varchar');
+        $this->setParametro('fecha_desde', 'fecha_desde', 'date');
+        $this->setParametro('fecha_hasta', 'fecha_hasta', 'date');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -93,15 +130,16 @@ class MODPropietario extends MODbase{
         //Devuelve la respuesta
         return $this->respuesta;
     }
-            
-    function eliminarPropietario(){
+
+    function eliminarPropietario()
+    {
         //Definicion de variables para ejecucion del procedimiento
-        $this->procedimiento='ate.ft_propietario_ime';
-        $this->transaccion='ATE_PRO_ELI';
-        $this->tipo_procedimiento='IME';
-                
+        $this->procedimiento = 'ate.ft_propietario_ime';
+        $this->transaccion = 'ATE_PRO_ELI';
+        $this->tipo_procedimiento = 'IME';
+
         //Define los parametros para la funcion
-		$this->setParametro('id_propietario','id_propietario','int4');
+        $this->setParametro('id_propietario', 'id_propietario', 'int4');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -110,6 +148,7 @@ class MODPropietario extends MODbase{
         //Devuelve la respuesta
         return $this->respuesta;
     }
-            
+
 }
+
 ?>

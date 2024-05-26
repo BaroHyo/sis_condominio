@@ -70,15 +70,21 @@ header("content-type: text/javascript; charset=UTF-8");
                         name: 'tipo',
                         fieldLabel: 'Tipo',
                         allowBlank: false,
+                        emptyText: 'Tipo...',
+                        typeAhead: true,
+                        triggerAction: 'all',
+                        lazyRender: true,
+                        mode: 'local',
                         anchor: '80%',
                         gwidth: 100,
-                        maxLength: 50
+                        store: ['servicio', 'bien']
                     },
-                    type: 'TextField',
+                    type: 'ComboBox',
+                    id_grupo: 0,
                     filters: {pfiltro: 'ser.tipo', type: 'string'},
-                    id_grupo: 1,
+                    valorInicial: 'servicio',
+                    form: true,
                     grid: true,
-                    form: true
                 },
                 {
                     config: {
@@ -244,14 +250,21 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name: 'fecha_mod', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
                 {name: 'usr_reg', type: 'string'},
                 {name: 'usr_mod', type: 'string'},
-
             ],
             sortInfo: {
                 field: 'id_servicio_at',
                 direction: 'ASC'
             },
             bdel: true,
-            bsave: true
+            bsave: false,
+            tabeast: [
+                {
+                    url: '../../../sis_condominio/vista/servicio_at_det/ServicioAtDet.php',
+                    title: 'Servicio',
+                    width: '40%',
+                    cls: 'ServicioAtDet'
+                }
+            ]
         }
     )
 </script>

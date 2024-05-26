@@ -18,13 +18,13 @@ header("content-type: text/javascript; charset=UTF-8");
     Phx.vista.PlanCuentaAt = Ext.extend(Phx.gridInterfaz, {
 
             constructor: function (config) {
-                this.maestro = config.maestro;
+                this.maestro = config;
                 //llama al constructor de la clase padre
                 Phx.vista.PlanCuentaAt.superclass.constructor.call(this, config);
                 this.init();
+                this.store.baseParams.id_condominio = this.maestro.id_condominio;
                 this.load({params: {start: 0, limit: this.tam_pag}})
             },
-
             Atributos: [
                 {
                     //configuracion del componente
@@ -38,11 +38,20 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 {
                     config: {
+                        labelSeparator: '',
+                        inputType: 'hidden',
+                        name: 'id_condominio'
+                    },
+                    type: 'Field',
+                    form: true
+                },
+                {
+                    config: {
                         name: 'codigo',
                         fieldLabel: 'Codigo',
                         allowBlank: false,
                         anchor: '80%',
-                        gwidth: 100,
+                        gwidth: 50,
                         maxLength: 100
                     },
                     type: 'TextField',
@@ -57,7 +66,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         fieldLabel: 'Nombre',
                         allowBlank: false,
                         anchor: '80%',
-                        gwidth: 100,
+                        gwidth: 300,
                         maxLength: 100
                     },
                     type: 'TextField',
@@ -77,7 +86,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         lazyRender: true,
                         mode: 'local',
                         anchor: '50%',
-                        gwidth: 100,
+                        gwidth: 120,
                         store: ['ingreso', 'egreso']
                     },
                     type: 'ComboBox',
@@ -219,14 +228,21 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name: 'fecha_mod', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
                 {name: 'usr_reg', type: 'string'},
                 {name: 'usr_mod', type: 'string'},
-
+                {name: 'id_condominio', type: 'numeric'},
             ],
             sortInfo: {
                 field: 'id_plan_cuenta_at',
                 direction: 'ASC'
             },
             bdel: true,
-            bsave: true
+            bsave: false,
+            bexcel: false,
+            fwidth: '40%',
+            fheight: '20%',
+            loadValoresIniciales: function () {
+                Phx.vista.PlanCuentaAt.superclass.loadValoresIniciales.call(this);
+                this.Cmp.id_condominio.setValue(this.maestro.id_condominio);
+            },
         }
     )
 </script>

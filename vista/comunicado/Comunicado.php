@@ -1,33 +1,28 @@
 <?php
 /****************************************************************************************
  * @package pXP
- * @file gen-BauleraPropietario.php
+ * @file gen-Comunicado.php
  * @author  (admin)
- * @date 15-05-2024 20:44:58
+ * @date 21-05-2024 05:16:20
  * @description Archivo con la interfaz de usuario que permite la ejecucion de todas las funcionalidades del sistema
  *
  * HISTORIAL DE MODIFICACIONES:
  * #ISSUE                FECHA                AUTOR                DESCRIPCION
- * #0                15-05-2024 20:44:58    admin            Creacion
+ * #0                21-05-2024 05:16:20    admin            Creacion
  * #
  *******************************************************************************************/
 
 header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
-    Phx.vista.BauleraPropietario = Ext.extend(Phx.gridInterfaz, {
+    Phx.vista.Comunicado = Ext.extend(Phx.gridInterfaz, {
 
             constructor: function (config) {
                 this.maestro = config.maestro;
                 //llama al constructor de la clase padre
-                Phx.vista.BauleraPropietario.superclass.constructor.call(this, config);
+                Phx.vista.Comunicado.superclass.constructor.call(this, config);
                 this.init();
-                const dataPadre = Phx.CP.getPagina(this.idContenedorPadre).getSelectedData();
-                if (dataPadre) {
-                    this.onEnablePanel(this, dataPadre);
-                } else {
-                    this.bloquearMenus();
-                }
+                this.load({params: {start: 0, limit: this.tam_pag}})
             },
 
             Atributos: [
@@ -36,43 +31,34 @@ header("content-type: text/javascript; charset=UTF-8");
                     config: {
                         labelSeparator: '',
                         inputType: 'hidden',
-                        name: 'id_baulera_propietario'
+                        name: 'id_comunicado'
                     },
                     type: 'Field',
                     form: true
                 },
                 {
                     config: {
-                        labelSeparator: '',
-                        inputType: 'hidden',
-                        name: 'id_propietario'
-                    },
-                    type: 'Field',
-                    form: true
-                },
-                {
-                    config: {
-                        name: 'id_baulera',
-                        fieldLabel: 'Baulera',
+                        name: 'id_condominio',
+                        fieldLabel: 'Condominio',
                         allowBlank: false,
                         emptyText: 'Elija una opción...',
                         store: new Ext.data.JsonStore({
-                            url: '../../sis_condominio/control/Baulera/listarBaulera',
-                            id: 'id_baulera',
+                            url: '../../sis_condominio/control/Condominio/listarCondominio',
+                            id: 'id_condominio',
                             root: 'datos',
                             sortInfo: {
-                                field: 'codigo',
+                                field: 'nombre',
                                 direction: 'ASC'
                             },
                             totalProperty: 'total',
-                            fields: ['id_baulera', 'codigo', 'informacion_adicional'],
+                            fields: ['id_condominio', 'codigo', 'nombre'],
                             remoteSort: true,
-                            baseParams: {par_filtro: 'bau.codigo'}
+                            baseParams: {par_filtro: 'movtip.nombre#movtip.codigo'}
                         }),
-                        valueField: 'id_baulera',
-                        displayField: 'codigo',
-                        gdisplayField: 'codigo',
-                        hiddenName: 'id_baulera',
+                        valueField: 'id_condominio',
+                        displayField: 'nombre',
+                        gdisplayField: 'desc_condominio',
+                        hiddenName: 'id_condominio',
                         forceSelection: true,
                         typeAhead: false,
                         triggerAction: 'all',
@@ -80,33 +66,81 @@ header("content-type: text/javascript; charset=UTF-8");
                         mode: 'remote',
                         pageSize: 15,
                         queryDelay: 1000,
-                        anchor: '100%',
+                        anchor: '80%',
                         gwidth: 150,
                         minChars: 2,
                         renderer: function (value, p, record) {
-                            return String.format('{0}', record.data['codigo']);
+                            return String.format('{0}', record.data['desc_condominio']);
                         }
                     },
                     type: 'ComboBox',
                     id_grupo: 0,
-                    filters: {pfiltro: 'bau.codigo', type: 'string'},
+                    filters: {pfiltro: 'movtip.nombre', type: 'string'},
                     grid: true,
                     form: true
                 },
                 {
                     config: {
-                        name: 'informacion_adicional',
-                        fieldLabel: 'Informacion Adicional',
+                        name: 'fecha',
+                        fieldLabel: 'Fecha',
+                        allowBlank: true,
+                        anchor: '50%',
+                        gwidth: 100,
+                        format: 'd/m/Y',
+                        renderer: function (value, p, record) {
+                            return value ? value.dateFormat('d/m/Y') : ''
+                        }
+                    },
+                    type: 'DateField',
+                    filters: {pfiltro: 'com.fecha', type: 'date'},
+                    id_grupo: 1,
+                    grid: true,
+                    form: true
+                },
+                {
+                    config: {
+                        name: 'estado',
+                        fieldLabel: 'Estado',
                         allowBlank: true,
                         anchor: '80%',
-                        gwidth: 200,
-                        maxLength: 10
+                        gwidth: 100,
+                        maxLength: 50
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'bau.informacion_adicional', type: 'string'},
+                    filters: {pfiltro: 'com.estado', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: false
+                },
+                {
+                    config: {
+                        name: 'asunto',
+                        fieldLabel: 'Asunto',
+                        allowBlank: false,
+                        anchor: '80%',
+                        gwidth: 200,
+                        maxLength: 200
+                    },
+                    type: 'TextField',
+                    filters: {pfiltro: 'com.asunto', type: 'string'},
+                    id_grupo: 1,
+                    grid: true,
+                    form: true
+                },
+                {
+                    config: {
+                        name: 'contenido',
+                        fieldLabel: 'Contenido',
+                        allowBlank: true,
+                        anchor: '80%',
+                        gwidth: 200,
+                        qtip: 'Si no se define esta plantilla se utilizará la plantilla del estado',
+                    },
+                    type: 'HtmlEditor',
+                    filters: {pfiltro: 'com.contenido', type: 'string'},
+                    id_grupo: 1,
+                    grid: true,
+                    form: true
                 },
                 {
                     config: {
@@ -118,7 +152,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 10
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'bap.estado_reg', type: 'string'},
+                    filters: {pfiltro: 'com.estado_reg', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -151,7 +185,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         }
                     },
                     type: 'DateField',
-                    filters: {pfiltro: 'bap.fecha_reg', type: 'date'},
+                    filters: {pfiltro: 'com.fecha_reg', type: 'date'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -166,7 +200,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 4
                     },
                     type: 'Field',
-                    filters: {pfiltro: 'bap.id_usuario_ai', type: 'numeric'},
+                    filters: {pfiltro: 'com.id_usuario_ai', type: 'numeric'},
                     id_grupo: 1,
                     grid: false,
                     form: false
@@ -181,7 +215,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 300
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'bap.usuario_ai', type: 'string'},
+                    filters: {pfiltro: 'com.usuario_ai', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -214,23 +248,26 @@ header("content-type: text/javascript; charset=UTF-8");
                         }
                     },
                     type: 'DateField',
-                    filters: {pfiltro: 'bap.fecha_mod', type: 'date'},
+                    filters: {pfiltro: 'com.fecha_mod', type: 'date'},
                     id_grupo: 1,
                     grid: true,
                     form: false
                 }
             ],
             tam_pag: 50,
-            title: 'Baulera Propietario',
-            ActSave: '../../sis_condominio/control/BauleraPropietario/insertarBauleraPropietario',
-            ActDel: '../../sis_condominio/control/BauleraPropietario/eliminarBauleraPropietario',
-            ActList: '../../sis_condominio/control/BauleraPropietario/listarBauleraPropietario',
-            id_store: 'id_baulera_propietario',
+            title: 'Comunicado',
+            ActSave: '../../sis_condominio/control/Comunicado/insertarComunicado',
+            ActDel: '../../sis_condominio/control/Comunicado/eliminarComunicado',
+            ActList: '../../sis_condominio/control/Comunicado/listarComunicado',
+            id_store: 'id_comunicado',
             fields: [
-                {name: 'id_baulera_propietario', type: 'numeric'},
+                {name: 'id_comunicado', type: 'numeric'},
                 {name: 'estado_reg', type: 'string'},
-                {name: 'id_propietario', type: 'numeric'},
-                {name: 'id_baulera', type: 'numeric'},
+                {name: 'id_condominio', type: 'numeric'},
+                {name: 'asunto', type: 'string'},
+                {name: 'contenido', type: 'string'},
+                {name: 'estado', type: 'string'},
+                {name: 'fecha', type: 'date', dateFormat: 'Y-m-d'},
                 {name: 'id_usuario_reg', type: 'numeric'},
                 {name: 'fecha_reg', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
                 {name: 'id_usuario_ai', type: 'numeric'},
@@ -239,30 +276,15 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name: 'fecha_mod', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
                 {name: 'usr_reg', type: 'string'},
                 {name: 'usr_mod', type: 'string'},
-                {name: 'codigo', type: 'string'},
-                {name: 'informacion_adicional', type: 'string'},
+                {name: 'desc_condominio', type: 'string'},
 
             ],
             sortInfo: {
-                field: 'id_baulera_propietario',
+                field: 'id_comunicado',
                 direction: 'ASC'
             },
             bdel: true,
-            bsave: false,
-            onReloadPage: function (m) {
-                this.maestro = m;
-                this.store.baseParams = {id_propietario: this.maestro.id_propietario};
-                this.iniciarEvento()
-                this.load({params: {start: 0, limit: 50}})
-            },
-            loadValoresIniciales: function () {
-                Phx.vista.BauleraPropietario.superclass.loadValoresIniciales.call(this);
-                this.Cmp.id_propietario.setValue(this.maestro.id_propietario);
-            },
-            iniciarEvento: function () {
-                this.Cmp.id_baulera.store.baseParams = Ext.apply(this.Cmp.id_baulera.store.baseParams, {id_condominio: this.maestro.id_condominio});
-                this.Cmp.id_baulera.modificado = true;
-            }
+            bsave: false
         }
     )
 </script>

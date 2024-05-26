@@ -56,7 +56,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         fieldLabel: 'Numero Espacio',
                         allowBlank: false,
                         anchor: '80%',
-                        gwidth: 150,
+                        gwidth: 100,
                         maxLength: 20
                     },
                     type: 'TextField',
@@ -100,7 +100,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         fieldLabel: 'Informacion Adicional',
                         allowBlank: true,
                         anchor: '80%',
-                        gwidth: 100,
+                        gwidth: 200,
                         renderer: function (value, metaData, record, rowIndex, colIndex, store) {
                             metaData.css = 'multilineColumn';
                             return String.format('<div class="gridmultiline"><font>{0}</font></div>', value);//#4
@@ -253,6 +253,8 @@ header("content-type: text/javascript; charset=UTF-8");
             },
             bdel: true,
             bsave: false,
+            fwidth: '60%',
+            fheight: '30%',
             onReloadPage: function (m) {
                 this.maestro = m;
                 this.store.baseParams = {id_condominio: this.maestro.id_condominio};

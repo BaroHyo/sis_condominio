@@ -1,18 +1,18 @@
 <?php
 /****************************************************************************************
  * @package pXP
- * @file gen-MODUnidades.php
+ * @file gen-MODComunicado.php
  * @author  (admin)
- * @date 12-05-2024 12:25:22
+ * @date 21-05-2024 05:16:20
  * @description Clase que envia los parametros requeridos a la Base de datos para la ejecucion de las funciones, y que recibe la respuesta del resultado de la ejecucion de las mismas
  *
  * HISTORIAL DE MODIFICACIONES:
  * #ISSUE                FECHA                AUTOR                DESCRIPCION
- * #0                12-05-2024 12:25:22    admin             Creacion
+ * #0                21-05-2024 05:16:20    admin             Creacion
  * #
  *****************************************************************************************/
 
-class MODUnidades extends MODbase
+class MODComunicado extends MODbase
 {
 
     function __construct(CTParametro $pParam)
@@ -20,21 +20,21 @@ class MODUnidades extends MODbase
         parent::__construct($pParam);
     }
 
-    function listarUnidades()
+    function listarComunicado()
     {
         //Definicion de variables para ejecucion del procedimientp
-        $this->procedimiento = 'ate.ft_unidades_sel';
-        $this->transaccion = 'ATE_UNI_SEL';
+        $this->procedimiento = 'ate.ft_comunicado_sel';
+        $this->transaccion = 'ATE_COM_SEL';
         $this->tipo_procedimiento = 'SEL';//tipo de transaccion
 
         //Definicion de la lista del resultado del query
-        $this->captura('id_unidades', 'int4');
+        $this->captura('id_comunicado', 'int4');
         $this->captura('estado_reg', 'varchar');
         $this->captura('id_condominio', 'int4');
-        $this->captura('numero_unidad', 'varchar');
-        $this->captura('descripcion', 'text');
-        $this->captura('tipo_unidad', 'varchar');
-        $this->captura('informacion_adicional', 'text');
+        $this->captura('asunto', 'varchar');
+        $this->captura('contenido', 'text');
+        $this->captura('estado', 'varchar');
+        $this->captura('fecha', 'date');
         $this->captura('id_usuario_reg', 'int4');
         $this->captura('fecha_reg', 'timestamp');
         $this->captura('id_usuario_ai', 'int4');
@@ -43,14 +43,8 @@ class MODUnidades extends MODbase
         $this->captura('fecha_mod', 'timestamp');
         $this->captura('usr_reg', 'varchar');
         $this->captura('usr_mod', 'varchar');
-        $this->captura('id_bloques', 'int4');
-        $this->captura('id_pisos', 'int4');
-        $this->captura('desc_bloque', 'varchar');
-        $this->captura('desc_piso', 'varchar');
-        $this->captura('id_espensa', 'int4');
-        $this->captura('desc_espensa', 'varchar');
-        $this->captura('importe', 'numeric');
-        $this->captura('desc_moneda', 'varchar');
+        $this->captura('desc_condominio', 'varchar');
+
         //Ejecuta la instruccion
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -59,23 +53,20 @@ class MODUnidades extends MODbase
         return $this->respuesta;
     }
 
-    function insertarUnidades()
+    function insertarComunicado()
     {
         //Definicion de variables para ejecucion del procedimiento
-        $this->procedimiento = 'ate.ft_unidades_ime';
-        $this->transaccion = 'ATE_UNI_INS';
+        $this->procedimiento = 'ate.ft_comunicado_ime';
+        $this->transaccion = 'ATE_COM_INS';
         $this->tipo_procedimiento = 'IME';
 
         //Define los parametros para la funcion
         $this->setParametro('estado_reg', 'estado_reg', 'varchar');
         $this->setParametro('id_condominio', 'id_condominio', 'int4');
-        $this->setParametro('numero_unidad', 'numero_unidad', 'varchar');
-        $this->setParametro('descripcion', 'descripcion', 'text');
-        $this->setParametro('tipo_unidad', 'tipo_unidad', 'varchar');
-        $this->setParametro('informacion_adicional', 'informacion_adicional', 'text');
-        $this->setParametro('id_bloques', 'id_bloques', 'int4');
-        $this->setParametro('id_pisos', 'id_pisos', 'int4');
-        $this->setParametro('id_espensa', 'id_espensa', 'int4');
+        $this->setParametro('asunto', 'asunto', 'varchar');
+        $this->setParametro('contenido', 'contenido', 'text');
+        $this->setParametro('estado', 'estado', 'varchar');
+        $this->setParametro('fecha', 'fecha', 'date');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -85,24 +76,21 @@ class MODUnidades extends MODbase
         return $this->respuesta;
     }
 
-    function modificarUnidades()
+    function modificarComunicado()
     {
         //Definicion de variables para ejecucion del procedimiento
-        $this->procedimiento = 'ate.ft_unidades_ime';
-        $this->transaccion = 'ATE_UNI_MOD';
+        $this->procedimiento = 'ate.ft_comunicado_ime';
+        $this->transaccion = 'ATE_COM_MOD';
         $this->tipo_procedimiento = 'IME';
 
         //Define los parametros para la funcion
-        $this->setParametro('id_unidades', 'id_unidades', 'int4');
+        $this->setParametro('id_comunicado', 'id_comunicado', 'int4');
         $this->setParametro('estado_reg', 'estado_reg', 'varchar');
         $this->setParametro('id_condominio', 'id_condominio', 'int4');
-        $this->setParametro('numero_unidad', 'numero_unidad', 'varchar');
-        $this->setParametro('descripcion', 'descripcion', 'text');
-        $this->setParametro('tipo_unidad', 'tipo_unidad', 'varchar');
-        $this->setParametro('informacion_adicional', 'informacion_adicional', 'text');
-        $this->setParametro('id_bloques', 'id_bloques', 'int4');
-        $this->setParametro('id_pisos', 'id_pisos', 'int4');
-        $this->setParametro('id_espensa', 'id_espensa', 'int4');
+        $this->setParametro('asunto', 'asunto', 'varchar');
+        $this->setParametro('contenido', 'contenido', 'text');
+        $this->setParametro('estado', 'estado', 'varchar');
+        $this->setParametro('fecha', 'fecha', 'date');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -112,15 +100,33 @@ class MODUnidades extends MODbase
         return $this->respuesta;
     }
 
-    function eliminarUnidades()
+    function eliminarComunicado()
     {
         //Definicion de variables para ejecucion del procedimiento
-        $this->procedimiento = 'ate.ft_unidades_ime';
-        $this->transaccion = 'ATE_UNI_ELI';
+        $this->procedimiento = 'ate.ft_comunicado_ime';
+        $this->transaccion = 'ATE_COM_ELI';
         $this->tipo_procedimiento = 'IME';
 
         //Define los parametros para la funcion
-        $this->setParametro('id_unidades', 'id_unidades', 'int4');
+        $this->setParametro('id_comunicado', 'id_comunicado', 'int4');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
+
+    function notificarComunidaco()
+    {
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento = 'ate.ft_comunicado_ime';
+        $this->transaccion = 'ATE_COM_CANB';
+        $this->tipo_procedimiento = 'IME';
+
+        //Define los parametros para la funcion
+        $this->setParametro('id_comunicado', 'id_comunicado', 'int4');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
