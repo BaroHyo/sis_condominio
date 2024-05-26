@@ -203,10 +203,12 @@ header("content-type: text/javascript; charset=UTF-8");
                 {
                     url: '../../../sis_condominio/vista/pisos/PisosBlo.php',
                     title: 'Pisos',
-                    width: '40%',
+                    width: '50%',
                     cls: 'PisosBlo'
                 }
             ],
+            fwidth: '40%',
+            fheight: '13%',
             loadValoresIniciales: function () {
                 Phx.vista.Bloques.superclass.loadValoresIniciales.call(this);
                 this.Cmp.id_condominio.setValue(this.maestro.id_condominio);

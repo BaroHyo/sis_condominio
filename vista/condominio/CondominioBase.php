@@ -24,18 +24,34 @@ header("content-type: text/javascript; charset=UTF-8");
                 this.init();
                 this.addButton('btm-bloques', {
                     text: 'Bloques/Pisos',
-                    iconCls: 'bfolder',
+                    iconCls: 'bsee',
                     disabled: false,
                     handler: this.onShowBloque,
                     tooltip: '<b>Bloques</b>',
                     scope: this
                 });
-                this.addButton('btm-directorio', {
-                    text: 'Directorio',
-                    iconCls: 'bfolder',
+                this.addButton('btm-plan-cuenta', {
+                    text: 'Plan de Cuenta',
+                    iconCls: 'bengineadd',
                     disabled: false,
-                    handler: this.onShowDirectorio,
+                    handler: this.onShowPlanCuenta,
                     tooltip: '<b>Directorio por condominio</b>',
+                    scope: this
+                });
+                this.addButton('btm-sancion', {
+                    text: 'Sanciones',
+                    iconCls: 'bpagar',
+                    disabled: false,
+                    handler: this.onSanciones,
+                    tooltip: '<b>Directorio por condominio</b>',
+                    scope: this
+                });
+                this.addButton('btm-espensa', {
+                    text: 'Espensa',
+                    iconCls: 'binfo',
+                    disabled: false,
+                    handler: this.onEspensa,
+                    tooltip: '<b>Bloques</b>',
                     scope: this
                 });
             },
@@ -62,7 +78,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     filters: {pfiltro: 'con.codigo', type: 'string'},
                     id_grupo: 1,
                     grid: true,
-                    form: true
+                    form: false
                 },
                 {
                     config: {
@@ -70,14 +86,18 @@ header("content-type: text/javascript; charset=UTF-8");
                         fieldLabel: 'Nombre',
                         allowBlank: false,
                         anchor: '80%',
-                        gwidth: 200,
-                        maxLength: 200
+                        gwidth: 250,
+                        maxLength: 200,
+                        renderer: function (value, p, record) {
+                            return String.format('<b>{0}</b>', value);
+                        }
                     },
                     type: 'TextField',
                     filters: {pfiltro: 'con.nombre', type: 'string'},
                     id_grupo: 1,
                     grid: true,
-                    form: true
+                    form: true,
+                    bottom_filter: true
                 },
                 {
                     config: {
@@ -152,7 +172,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         lazyRender: true,
                         mode: 'local',
                         anchor: '50%',
-                        gwidth: 100,
+                        gwidth: 150,
                         store: ['no', 'si']
                     },
                     type: 'ComboBox',
@@ -160,7 +180,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     filters: {pfiltro: 'con.bloques', type: 'string'},
                     valorInicial: 'no',
                     form: true,
-                    grid: true,
+                    grid: false,
                 },
                 {
                     config: {
@@ -168,7 +188,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         fieldLabel: 'Informacion Adicional',
                         allowBlank: true,
                         anchor: '80%',
-                        gwidth: 200,
+                        gwidth: 300,
                         renderer: function (value, metaData, record, rowIndex, colIndex, store) {
                             metaData.css = 'multilineColumn';
                             return String.format('<div class="gridmultiline"><font>{0}</font></div>', value);//#4
@@ -326,13 +346,17 @@ header("content-type: text/javascript; charset=UTF-8");
             preparaMenu: function (n) {
                 Phx.vista.CondominioBase.superclass.preparaMenu.call(this, n);
                 this.getBoton('btm-bloques').enable();
-                this.getBoton('btm-directorio').enable();
+                this.getBoton('btm-plan-cuenta').enable();
+                this.getBoton('btm-sancion').enable();
+                this.getBoton('btm-espensa').enable();
             },
             liberaMenu: function () {
                 const tb = Phx.vista.CondominioBase.superclass.liberaMenu.call(this);
                 if (tb) {
                     this.getBoton('btm-bloques').disable();
-                    this.getBoton('btm-directorio').disable();
+                    this.getBoton('btm-plan-cuenta').disable();
+                    this.getBoton('btm-sancion').disable();
+                    this.getBoton('btm-espensa').disable();
                 }
                 return tb
             },
@@ -343,7 +367,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     me.objSolForm = Phx.CP.loadWindows('../../../sis_condominio/vista/bloques/Bloques.php',
                         'Bloques',
                         {
-                            width: '70%',
+                            width: '60%',
                             height: 500
                         },
                         {
@@ -377,9 +401,51 @@ header("content-type: text/javascript; charset=UTF-8");
                     rec.data,
                     this.idContenedor,
                     'Directorio'
-                )
-
+                );
+            },
+            onShowPlanCuenta: function () {
+                const rec = this.sm.getSelected();
+                const me = this;
+                me.objSolForm = Phx.CP.loadWindows('../../../sis_condominio/vista/plan_cuenta_at/PlanCuentaAtArb.php',
+                    'Plan de Cuentas',
+                    {
+                        width: '70%',
+                        height: 500
+                    },
+                    rec.data,
+                    this.idContenedor,
+                    'PlanCuentaAtArb'
+                );
+            },
+            onSanciones: function () {
+                const rec = this.sm.getSelected();
+                const me = this;
+                me.objSolForm = Phx.CP.loadWindows('../../../sis_condominio/vista/sancion/Sancion.php',
+                    'Sanciones',
+                    {
+                        width: '70%',
+                        height: 500
+                    },
+                    rec.data,
+                    this.idContenedor,
+                    'Sancion'
+                );
+            },
+            onEspensa: function () {
+                const rec = this.sm.getSelected();
+                const me = this;
+                me.objSolForm = Phx.CP.loadWindows('../../../sis_condominio/vista/espensa/Espensa.php',
+                    'Espensa',
+                    {
+                        width: '70%',
+                        height: 500
+                    },
+                    rec.data,
+                    this.idContenedor,
+                    'Espensa'
+                );
             }
+
         }
     )
 </script>

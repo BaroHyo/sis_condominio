@@ -1,18 +1,18 @@
-CREATE OR REPLACE FUNCTION "ate"."ft_solicitud_detalle_sel"(    
+CREATE OR REPLACE FUNCTION "ate"."ft_invitados_sel"(    
                 p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
 RETURNS character varying AS
 $BODY$
 /**************************************************************************
  SISTEMA:        Atenea
- FUNCION:         ate.ft_solicitud_detalle_sel
- DESCRIPCION:   Funcion que devuelve conjuntos de registros de las consultas relacionadas con la tabla 'ate.tsolicitud_detalle'
+ FUNCION:         ate.ft_invitados_sel
+ DESCRIPCION:   Funcion que devuelve conjuntos de registros de las consultas relacionadas con la tabla 'ate.tinvitados'
  AUTOR:          (admin)
- FECHA:            15-05-2024 22:30:44
+ FECHA:            21-05-2024 04:12:21
  COMENTARIOS:    
 ***************************************************************************
  HISTORIAL DE MODIFICACIONES:
 #ISSUE                FECHA                AUTOR                DESCRIPCION
- #0                15-05-2024 22:30:44    admin             Creacion    
+ #0                21-05-2024 04:12:21    admin             Creacion    
  #
  ***************************************************************************/
 
@@ -25,40 +25,43 @@ DECLARE
                 
 BEGIN
 
-    v_nombre_funcion = 'ate.ft_solicitud_detalle_sel';
+    v_nombre_funcion = 'ate.ft_invitados_sel';
     v_parametros = pxp.f_get_record(p_tabla);
 
     /*********************************    
-     #TRANSACCION:  'ATE_DTS_SEL'
+     #TRANSACCION:  'ATE_INV_SEL'
      #DESCRIPCION:    Consulta de datos
      #AUTOR:        admin    
-     #FECHA:        15-05-2024 22:30:44
+     #FECHA:        21-05-2024 04:12:21
     ***********************************/
 
-    IF (p_transaccion='ATE_DTS_SEL') THEN
+    IF (p_transaccion='ATE_INV_SEL') THEN
                      
         BEGIN
             --Sentencia de la consulta
             v_consulta:='SELECT
-                        dts.id_solicitud_detalle,
-                        dts.estado_reg,
-                        dts.id_solicitud,
-                        dts.id_areas_comunes,
-                        dts.hr_desde,
-                        dts.hr_hasta,
-                        dts.importer,
-                        dts.justificativo,
-                        dts.id_usuario_reg,
-                        dts.fecha_reg,
-                        dts.id_usuario_ai,
-                        dts.usuario_ai,
-                        dts.id_usuario_mod,
-                        dts.fecha_mod,
+                        inv.id_invitados,
+                        inv.estado_reg,
+                        inv.id_solicitud,
+                        inv.revisar,
+                        inv.nombre,
+                        inv.ap_paterno,
+                        inv.ap_materno,
+                        inv.fecha_nacimiento,
+                        inv.tipo_documento,
+                        inv.codigo_documento,
+                        inv.informacion_adicional,
+                        inv.id_usuario_reg,
+                        inv.fecha_reg,
+                        inv.id_usuario_ai,
+                        inv.usuario_ai,
+                        inv.id_usuario_mod,
+                        inv.fecha_mod,
                         usu1.cuenta as usr_reg,
                         usu2.cuenta as usr_mod    
-                        FROM ate.tsolicitud_detalle dts
-                        JOIN segu.tusuario usu1 ON usu1.id_usuario = dts.id_usuario_reg
-                        LEFT JOIN segu.tusuario usu2 ON usu2.id_usuario = dts.id_usuario_mod
+                        FROM ate.tinvitados inv
+                        JOIN segu.tusuario usu1 ON usu1.id_usuario = inv.id_usuario_reg
+                        LEFT JOIN segu.tusuario usu2 ON usu2.id_usuario = inv.id_usuario_mod
                         WHERE  ';
             
             --Definicion de la respuesta
@@ -71,20 +74,20 @@ BEGIN
         END;
 
     /*********************************    
-     #TRANSACCION:  'ATE_DTS_CONT'
+     #TRANSACCION:  'ATE_INV_CONT'
      #DESCRIPCION:    Conteo de registros
      #AUTOR:        admin    
-     #FECHA:        15-05-2024 22:30:44
+     #FECHA:        21-05-2024 04:12:21
     ***********************************/
 
-    ELSIF (p_transaccion='ATE_DTS_CONT') THEN
+    ELSIF (p_transaccion='ATE_INV_CONT') THEN
 
         BEGIN
             --Sentencia de la consulta de conteo de registros
-            v_consulta:='SELECT COUNT(id_solicitud_detalle)
-                         FROM ate.tsolicitud_detalle dts
-                         JOIN segu.tusuario usu1 ON usu1.id_usuario = dts.id_usuario_reg
-                         LEFT JOIN segu.tusuario usu2 ON usu2.id_usuario = dts.id_usuario_mod
+            v_consulta:='SELECT COUNT(id_invitados)
+                         FROM ate.tinvitados inv
+                         JOIN segu.tusuario usu1 ON usu1.id_usuario = inv.id_usuario_reg
+                         LEFT JOIN segu.tusuario usu2 ON usu2.id_usuario = inv.id_usuario_mod
                          WHERE ';
             
             --Definicion de la respuesta            
@@ -113,4 +116,4 @@ END;
 $BODY$
 LANGUAGE 'plpgsql' VOLATILE
 COST 100;
-ALTER FUNCTION "ate"."ft_solicitud_detalle_sel"(integer, integer, character varying, character varying) OWNER TO postgres;
+ALTER FUNCTION "ate"."ft_invitados_sel"(integer, integer, character varying, character varying) OWNER TO postgres;

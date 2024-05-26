@@ -56,7 +56,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         fieldLabel: 'Codigo',
                         allowBlank: false,
                         anchor: '80%',
-                        gwidth: 200,
+                        gwidth: 100,
                         maxLength: 20
                     },
                     type: 'TextField',
@@ -223,6 +223,8 @@ header("content-type: text/javascript; charset=UTF-8");
             },
             bdel: true,
             bsave: false,
+            fwidth: '60%',
+            fheight: '25%',
             onReloadPage: function (m) {
                 this.maestro = m;
                 this.store.baseParams = {id_condominio: this.maestro.id_condominio};

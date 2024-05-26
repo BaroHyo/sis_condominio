@@ -202,11 +202,13 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name: 'usr_mod', type: 'string'},
             ],
             sortInfo: {
-                field: 'id_pisos',
+                field: 'numero_piso',
                 direction: 'ASC'
             },
             bdel: true,
-            bsave: true
+            bsave: false,
+            fwidth: '40%',
+            fheight: '13%',
         }
     )
 </script>

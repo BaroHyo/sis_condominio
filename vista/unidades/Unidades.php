@@ -153,24 +153,45 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 {
                     config: {
-                        name: 'tipo_unidad',
-                        fieldLabel: 'Tipo Unidad',
+                        name: 'id_espensa',
+                        fieldLabel: 'Tipo',
                         allowBlank: false,
-                        emptyText: 'Tipo...',
-                        typeAhead: true,
+                        emptyText: 'Elija una opción...',
+                        store: new Ext.data.JsonStore({
+                            url: '../../sis_condominio/control/Espensa/listarEspensa',
+                            id: 'id_espensa',
+                            root: 'datos',
+                            sortInfo: {
+                                field: 'nombre',
+                                direction: 'ASC'
+                            },
+                            totalProperty: 'total',
+                            fields: ['id_espensa', 'nombre'],
+                            remoteSort: true,
+                            baseParams: {par_filtro: 'esp.nombre'}
+                        }),
+                        valueField: 'id_espensa',
+                        displayField: 'nombre',
+                        gdisplayField: 'desc_espensa',
+                        hiddenName: 'id_espensa',
+                        forceSelection: true,
+                        typeAhead: false,
                         triggerAction: 'all',
                         lazyRender: true,
-                        mode: 'local',
+                        mode: 'remote',
+                        pageSize: 15,
+                        queryDelay: 1000,
                         anchor: '80%',
-                        gwidth: 100,
-                        store: ['Residencial', 'Comercial', 'Mixto', 'Otros']
+                        gwidth: 200,
+                        minChars: 2,
+                        renderer: function (value, p, record) {
+                            return String.format('<b style="color: darkblue">{0}</b>', record.data['desc_espensa']);
+                        }
                     },
                     type: 'ComboBox',
                     id_grupo: 0,
-                    filters: {pfiltro: 'uni.tipo_unidad', type: 'string'},
-                    valorInicial: 'Residencial',
-                    form: true,
                     grid: true,
+                    form: true
                 },
                 {
                     config: {
@@ -187,8 +208,48 @@ header("content-type: text/javascript; charset=UTF-8");
                     type: 'TextArea',
                     filters: {pfiltro: 'uni.descripcion', type: 'string'},
                     id_grupo: 1,
+                    grid: false,
+                    form: false
+                },
+                {
+                    config: {
+                        name: 'importe',
+                        fieldLabel: 'Espensa',
+                        allowBlank: false,
+                        anchor: '80%',
+                        gwidth: 100,
+                        renderer: function (value, p, record) {
+                            Number.prototype.formatDinero = function (c, d, t) {
+                                var n = this,
+                                    c = isNaN(c = Math.abs(c)) ? 2 : c,
+                                    d = d == undefined ? "." : d,
+                                    t = t == undefined ? "," : t,
+                                    s = n < 0 ? "-" : "",
+                                    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+                                    j = (j = i.length) > 3 ? j % 3 : 0;
+                                return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+                            };
+                            return String.format('<div style="vertical-align:middle;text-align:right;"><b>{0}</b></div>', (parseFloat(value)).formatDinero(2, ',', '.'));
+                        }
+                    },
+                    type: 'NumberField',
+                    id_grupo: 1,
                     grid: true,
-                    form: true
+                    form: false
+                },
+                {
+                    config: {
+                        name: 'desc_moneda',
+                        fieldLabel: 'Moneda',
+                        allowBlank: false,
+                        anchor: '80%',
+                        gwidth: 150,
+                        maxLength: 20
+                    },
+                    type: 'TextField',
+                    id_grupo: 1,
+                    grid: true,
+                    form: false
                 },
                 {
                     config: {
@@ -346,7 +407,10 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name: 'id_pisos', type: 'numeric'},
                 {name: 'desc_bloque', type: 'string'},
                 {name: 'desc_piso', type: 'string'},
-
+                {name: 'id_espensa', type: 'numeric'},
+                {name: 'desc_espensa', type: 'string'},
+                {name: 'importe', type: 'numeric'},
+                {name: 'desc_moneda', type: 'string'},
             ],
             sortInfo: {
                 field: 'id_unidades',
@@ -354,6 +418,14 @@ header("content-type: text/javascript; charset=UTF-8");
             },
             bdel: true,
             bsave: false,
+            fwidth: '60%',
+            fheight: '30%',
+            tipoStore: 'GroupingStore',//GroupingStore o JsonStore #
+            remoteGroup: true,
+            groupField: 'desc_piso',
+            viewGrid: new Ext.grid.GroupingView({
+                forceFit: false
+            }),
             onReloadPage: function (m) {
                 this.maestro = m;
                 this.store.baseParams = {id_condominio: this.maestro.id_condominio};
@@ -410,8 +482,6 @@ header("content-type: text/javascript; charset=UTF-8");
                     }
                 });
             }
-
-
         }
     )
 </script>
