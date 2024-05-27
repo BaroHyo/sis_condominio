@@ -44,7 +44,10 @@ class MODUnidadPropietario extends MODbase
         $this->captura('descripcion', 'text');
         $this->captura('tipo_unidad', 'varchar');
         $this->captura('informacion_adicional', 'text');
-        $this->captura('numero_piso', 'varchar');
+        $this->captura('desc_piso', 'varchar');
+        $this->captura('desc_espensa', 'varchar');
+        $this->captura('importe', 'numeric');
+        $this->captura('desc_moneda', 'varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();

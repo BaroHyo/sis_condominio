@@ -16,8 +16,11 @@ class ACTBauleraPropietario extends ACTbase{
             
     function listarBauleraPropietario(){
 		$this->objParam->defecto('ordenacion','id_baulera_propietario');
-
         $this->objParam->defecto('dir_ordenacion','asc');
+        if ($this->objParam->getParametro('id_propietario') != '') {
+            $this->objParam->addFiltro("bap.id_propietario = " . $this->objParam->getParametro('id_propietario'));
+        }
+
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
             $this->objReporte = new Reporte($this->objParam,$this);
             $this->res = $this->objReporte->generarReporteListado('MODBauleraPropietario','listarBauleraPropietario');
