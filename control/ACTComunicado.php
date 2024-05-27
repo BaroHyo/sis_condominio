@@ -18,8 +18,18 @@ class ACTComunicado extends ACTbase
     function listarComunicado()
     {
         $this->objParam->defecto('ordenacion', 'id_comunicado');
-
         $this->objParam->defecto('dir_ordenacion', 'asc');
+
+        switch ($this->objParam->getParametro('pes_estado')) {
+            case 'borrador':
+                $this->objParam->addFiltro("com.estado = ''registro''");
+                break;
+            case 'notificado':
+                $this->objParam->addFiltro("com.estado = ''enviado''");
+                break;
+                break;
+        }
+
         if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
             $this->objReporte = new Reporte($this->objParam, $this);
             $this->res = $this->objReporte->generarReporteListado('MODComunicado', 'listarComunicado');

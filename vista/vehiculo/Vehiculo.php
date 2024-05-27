@@ -51,24 +51,45 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 {
                     config: {
-                        name: 'tipo',
+                        name: 'id_tipo_vehiculos',
                         fieldLabel: 'Tipo',
                         allowBlank: false,
-                        emptyText: 'Tipo...',
-                        typeAhead: true,
+                        emptyText: 'Elija una opción...',
+                        store: new Ext.data.JsonStore({
+                            url: '../../sis_condominio/control/TipoVehiculos/listarTipoVehiculos',
+                            id: 'id_tipo_vehiculos',
+                            root: 'datos',
+                            sortInfo: {
+                                field: 'tipo',
+                                direction: 'ASC'
+                            },
+                            totalProperty: 'total',
+                            fields: ['id_tipo_vehiculos', 'tipo'],
+                            remoteSort: true,
+                            baseParams: {par_filtro: 'tpv.tipo'}
+                        }),
+                        valueField: 'id_tipo_vehiculos',
+                        displayField: 'tipo',
+                        gdisplayField: 'desc_tipo',
+                        hiddenName: 'id_unidades',
+                        forceSelection: true,
+                        typeAhead: false,
                         triggerAction: 'all',
                         lazyRender: true,
-                        mode: 'local',
+                        mode: 'remote',
+                        pageSize: 15,
+                        queryDelay: 1000,
                         anchor: '80%',
                         gwidth: 100,
-                        store: ['Moto', 'Auto']
+                        minChars: 2,
+                        renderer: function (value, p, record) {
+                            return String.format('{0}', record.data['desc_tipo']);
+                        }
                     },
                     type: 'ComboBox',
                     id_grupo: 0,
-                    filters: {pfiltro: 'veh.tipo', type: 'string'},
-                    valorInicial: 'Auto',
-                    form: true,
                     grid: true,
+                    form: true
                 },
                 {
                     config: {
@@ -119,7 +140,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     config: {
                         name: 'placa',
                         fieldLabel: 'Placa',
-                        allowBlank: false,
+                        allowBlank: true,
                         anchor: '80%',
                         gwidth: 150,
                         maxLength: 20
@@ -284,6 +305,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name: 'fecha_mod', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
                 {name: 'usr_reg', type: 'string'},
                 {name: 'usr_mod', type: 'string'},
+                {name: 'id_tipo_vehiculos', type: 'numeric'},
+                {name: 'desc_tipo', type: 'string'},
 
             ],
             sortInfo: {
@@ -292,6 +315,8 @@ header("content-type: text/javascript; charset=UTF-8");
             },
             bdel: true,
             bsave: false,
+            fwidth: '50%',
+            fheight: '25%',
             onReloadPage: function (m) {
                 this.maestro = m;
                 this.store.baseParams = {id_propietario: this.maestro.id_propietario};

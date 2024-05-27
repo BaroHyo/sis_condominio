@@ -67,7 +67,7 @@ header("content-type: text/javascript; charset=UTF-8");
                             totalProperty: 'total',
                             fields: ['id_baulera', 'codigo', 'informacion_adicional'],
                             remoteSort: true,
-                            baseParams: {par_filtro: 'bau.codigo'}
+                            baseParams: {par_filtro: 'bau.codigo', es_propietario: 'si'}
                         }),
                         valueField: 'id_baulera',
                         displayField: 'codigo',
@@ -249,6 +249,8 @@ header("content-type: text/javascript; charset=UTF-8");
             },
             bdel: true,
             bsave: false,
+            fwidth: '40%',
+            fheight: '15%',
             onReloadPage: function (m) {
                 this.maestro = m;
                 this.store.baseParams = {id_propietario: this.maestro.id_propietario};

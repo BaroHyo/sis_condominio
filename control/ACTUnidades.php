@@ -21,6 +21,13 @@ class ACTUnidades extends ACTbase
         $this->objParam->defecto('dir_ordenacion', 'asc');
         if ($this->objParam->getParametro('id_condominio') != '') {
             $this->objParam->addFiltro("uni.id_condominio = " . $this->objParam->getParametro('id_condominio'));
+
+            if ($this->objParam->getParametro('es_propietario') == 'si') {
+                $this->objParam->addFiltro("uni.id_unidades not in (select uni.id_unidades
+                                                                    from ate.tunidad_propietario uni
+                                                                             join ate.tunidades unn on unn.id_unidades = uni.id_unidades
+                                                                    where unn.id_condominio = " . $this->objParam->getParametro('id_condominio') . " )");
+            }
         }
         if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
             $this->objReporte = new Reporte($this->objParam, $this);

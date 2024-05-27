@@ -15,15 +15,15 @@
 header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
-    Phx.vista.Comunicado = Ext.extend(Phx.gridInterfaz, {
+    Phx.vista.ComunicadoBase = Ext.extend(Phx.gridInterfaz, {
 
             constructor: function (config) {
                 this.maestro = config.maestro;
                 //llama al constructor de la clase padre
-                Phx.vista.Comunicado.superclass.constructor.call(this, config);
+                Phx.vista.ComunicadoBase.superclass.constructor.call(this, config);
                 this.init();
-                this.load({params: {start: 0, limit: this.tam_pag}})
-            },
+                this.finCons = true;
+             },
 
             Atributos: [
                 {

@@ -54,7 +54,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     tooltip: '<b>Bloques</b>',
                     scope: this
                 });
-            },
+             },
             Atributos: [
                 {
                     //configuracion del componente
