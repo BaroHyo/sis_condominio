@@ -61,7 +61,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 {
                     config: {
-                        name: 'numero_piso',
+                        name: 'desc_piso',
                         fieldLabel: 'Piso',
                         allowBlank: true,
                         anchor: '80%',
@@ -88,14 +88,14 @@ header("content-type: text/javascript; charset=UTF-8");
                                 direction: 'ASC'
                             },
                             totalProperty: 'total',
-                            fields: ['id_unidades', 'numero_unidad', 'descripcion','desc_bloque','desc_piso'],
+                            fields: ['id_unidades', 'numero_unidad', 'descripcion', 'desc_bloque', 'desc_piso'],
                             remoteSort: true,
-                            baseParams: {par_filtro: 'uni.numero_unidad'}
+                            baseParams: {par_filtro: 'uni.numero_unidad', es_propietario: 'si'}
                         }),
                         valueField: 'id_unidades',
                         displayField: 'numero_unidad',
                         gdisplayField: 'numero_unidad',
-                        tpl: '<tpl for="."><div class="x-combo-list-item"><p><b>{desc_piso}:</b> {numero_unidad} </p><p>{desc_bloque}</p> </div></tpl>',
+                        tpl: '<tpl for="."><div class="x-combo-list-item"><p><b>{desc_piso}:</b> Unidad (<b style="color: darkblue">{numero_unidad}</b>) </p><p>{desc_bloque}</p> </div></tpl>',
                         hiddenName: 'id_unidades',
                         forceSelection: true,
                         typeAhead: false,
@@ -119,7 +119,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 {
                     config: {
-                        name: 'tipo_unidad',
+                        name: 'desc_espensa',
                         fieldLabel: 'Tipo Unidad',
                         allowBlank: true,
                         anchor: '80%',
@@ -127,24 +127,51 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 10
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'uni.tipo_unidad', type: 'string'},
+                    filters: {pfiltro: 'esp.nombre', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: false
                 },
                 {
                     config: {
-                        name: 'descripcion',
-                        fieldLabel: 'Descripcion',
+                        name: 'importe',
+                        fieldLabel: 'Importe Espensa',
+                        allowBlank: true,
+                        anchor: '40%',
+                        gwidth: 150,
+                        renderer: function (value, p, record) {
+                            Number.prototype.formatDinero = function (c, d, t) {
+                                var n = this,
+                                    c = isNaN(c = Math.abs(c)) ? 2 : c,
+                                    d = d == undefined ? "." : d,
+                                    t = t == undefined ? "," : t,
+                                    s = n < 0 ? "-" : "",
+                                    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+                                    j = (j = i.length) > 3 ? j % 3 : 0;
+                                return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+                            };
+                            return String.format('<div style="vertical-align:middle;text-align:right;"><b>{0}</b></div>', (parseFloat(value)).formatDinero(2, ',', '.'));
+                        }
+                    },
+                    type: 'NumberField',
+                    filters: {pfiltro: 'esp.importe', type: 'numeric'},
+                    id_grupo: 1,
+                    grid: true,
+                    form: false
+                },
+                {
+                    config: {
+                        name: 'desc_moneda',
+                        fieldLabel: 'Moneda',
                         allowBlank: true,
                         anchor: '80%',
                         gwidth: 200,
                         maxLength: 10
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'uni.descripcion', type: 'string'},
+                    filters: {pfiltro: 'mon.moneda', type: 'string'},
                     id_grupo: 1,
-                    grid: true,
+                    grid: false,
                     form: false
                 },
                 {
@@ -153,7 +180,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         fieldLabel: 'Informacion Adicional',
                         allowBlank: true,
                         anchor: '80%',
-                        gwidth: 200,
+                        gwidth: 300,
                         maxLength: 10
                     },
                     type: 'TextField',
@@ -297,7 +324,10 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name: 'descripcion', type: 'string'},
                 {name: 'tipo_unidad', type: 'string'},
                 {name: 'informacion_adicional', type: 'string'},
-                {name: 'numero_piso', type: 'string'},
+                {name: 'desc_piso', type: 'string'},
+                {name: 'desc_espensa', type: 'string'},
+                {name: 'importe', type: 'string'},
+                {name: 'desc_moneda', type: 'string'},
             ],
             sortInfo: {
                 field: 'id_unidad_propietario',

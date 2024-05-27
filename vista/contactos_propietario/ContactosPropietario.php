@@ -1,33 +1,33 @@
 <?php
 /****************************************************************************************
  * @package pXP
- * @file gen-Mascota.php
+ * @file gen-ContactosPropietario.php
  * @author  (admin)
- * @date 14-05-2024 15:34:01
+ * @date 27-05-2024 01:45:45
  * @description Archivo con la interfaz de usuario que permite la ejecucion de todas las funcionalidades del sistema
  *
  * HISTORIAL DE MODIFICACIONES:
  * #ISSUE                FECHA                AUTOR                DESCRIPCION
- * #0                14-05-2024 15:34:01    admin            Creacion
+ * #0                27-05-2024 01:45:45    admin            Creacion
  * #
  *******************************************************************************************/
 
 header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
-    Phx.vista.Mascota = Ext.extend(Phx.gridInterfaz, {
+    Phx.vista.ContactosPropietario = Ext.extend(Phx.gridInterfaz, {
 
             constructor: function (config) {
-                this.maestro = config.maestro;
-                //llama al constructor de la clase padre
-                Phx.vista.Mascota.superclass.constructor.call(this, config);
+                this.idContenedor = config.idContenedor;
+                this.maestro = config;
+                Phx.vista.ContactosPropietario.superclass.constructor.call(this, config);
                 this.init();
-                const dataPadre = Phx.CP.getPagina(this.idContenedorPadre).getSelectedData();
-                if (dataPadre) {
-                    this.onEnablePanel(this, dataPadre);
-                } else {
-                    this.bloquearMenus();
-                }
+                this.store.baseParams = {id_propietario: this.maestro.id_propietario};
+                this.load({params: {start: 0, limit: this.tam_pag}})
+            },
+            loadValoresIniciales: function () {
+                Phx.vista.ContactosPropietario.superclass.loadValoresIniciales.call(this);
+                this.Cmp.id_propietario.setValue(this.maestro.id_propietario);
             },
             Atributos: [
                 {
@@ -35,7 +35,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     config: {
                         labelSeparator: '',
                         inputType: 'hidden',
-                        name: 'id_mascota'
+                        name: 'id_contactos_propietario'
                     },
                     type: 'Field',
                     form: true
@@ -51,81 +51,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 {
                     config: {
-                        name: 'nombre',
-                        fieldLabel: 'Nombre',
-                        allowBlank: false,
-                        anchor: '80%',
-                        gwidth: 100,
-                        maxLength: 50
-                    },
-                    type: 'TextField',
-                    filters: {pfiltro: 'mas.nombre', type: 'string'},
-                    id_grupo: 1,
-                    grid: true,
-                    form: true
-                },
-                {
-                    config: {
-                        name: 'id_especie',
-                        fieldLabel: 'Especie',
-                        allowBlank: false,
-                        emptyText: 'Elija una opción...',
-                        store: new Ext.data.JsonStore({
-                            url: '../../sis_condominio/control/Especie/listarEspecie',
-                            id: 'id_',
-                            root: 'datos',
-                            sortInfo: {
-                                field: 'nombre',
-                                direction: 'ASC'
-                            },
-                            totalProperty: 'total',
-                            fields: ['id_especie', 'nombre',],
-                            remoteSort: true,
-                            baseParams: {par_filtro: 'esp.nombre'}
-                        }),
-                        valueField: 'id_especie',
-                        displayField: 'nombre',
-                        gdisplayField: 'desc_especie',
-                        hiddenName: 'id_especie',
-                        forceSelection: true,
-                        typeAhead: false,
-                        triggerAction: 'all',
-                        lazyRender: true,
-                        mode: 'remote',
-                        pageSize: 15,
-                        queryDelay: 1000,
-                        anchor: '80%',
-                        gwidth: 150,
-                        minChars: 2,
-                        renderer: function (value, p, record) {
-                            return String.format('{0}', record.data['desc_especie']);
-                        }
-                    },
-                    type: 'ComboBox',
-                    id_grupo: 0,
-                    filters: {pfiltro: 'esp.nombre', type: 'string'},
-                    grid: true,
-                    form: true
-                },
-                {
-                    config: {
-                        name: 'raza',
-                        fieldLabel: 'Raza',
-                        allowBlank: false,
-                        anchor: '80%',
-                        gwidth: 100,
-                        maxLength: 50
-                    },
-                    type: 'TextField',
-                    filters: {pfiltro: 'mas.raza', type: 'string'},
-                    id_grupo: 1,
-                    grid: true,
-                    form: true
-                },
-                {
-                    config: {
-                        name: 'genero',
-                        fieldLabel: 'genero',
+                        name: 'tipo',
+                        fieldLabel: 'Tipo',
                         allowBlank: false,
                         emptyText: 'Tipo...',
                         typeAhead: true,
@@ -133,34 +60,31 @@ header("content-type: text/javascript; charset=UTF-8");
                         lazyRender: true,
                         mode: 'local',
                         anchor: '80%',
-                        gwidth: 100,
-                        store: ['Masculino', 'Femenino']
+                        gwidth: 150,
+                        store: ['celular', 'telefono', 'correo']
                     },
                     type: 'ComboBox',
-                    id_grupo: 0,
-                    filters: {pfiltro: 'mas.genero', type: 'string'},
-                    valorInicial: 'Masculino',
+                    id_grupo: 1,
+                    filters: {pfiltro: 'cnp.tipo', type: 'string'},
+                    valorInicial: 'celular',
                     form: true,
                     grid: true,
                 },
                 {
                     config: {
-                        name: 'informacion_adicional',
-                        fieldLabel: 'Informacion Adicional',
+                        name: 'contacto',
+                        fieldLabel: 'Contacto',
                         allowBlank: true,
                         anchor: '80%',
-                        gwidth: 200,
-                        renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-                            metaData.css = 'multilineColumn';
-                            return String.format('<div class="gridmultiline"><font>{0}</font></div>', value);//#4
-                        }
+                        gwidth: 300,
                     },
-                    type: 'TextArea',
-                    filters: {pfiltro: 'mas.informacion_adicional', type: 'string'},
+                    type: 'TextField',
+                    filters: {pfiltro: 'cnp.contacto', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: true
                 },
+
                 {
                     config: {
                         name: 'estado_reg',
@@ -171,7 +95,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 10
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'mas.estado_reg', type: 'string'},
+                    filters: {pfiltro: 'cnp.estado_reg', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -204,7 +128,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         }
                     },
                     type: 'DateField',
-                    filters: {pfiltro: 'mas.fecha_reg', type: 'date'},
+                    filters: {pfiltro: 'cnp.fecha_reg', type: 'date'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -219,7 +143,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 4
                     },
                     type: 'Field',
-                    filters: {pfiltro: 'mas.id_usuario_ai', type: 'numeric'},
+                    filters: {pfiltro: 'cnp.id_usuario_ai', type: 'numeric'},
                     id_grupo: 1,
                     grid: false,
                     form: false
@@ -234,7 +158,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         maxLength: 300
                     },
                     type: 'TextField',
-                    filters: {pfiltro: 'mas.usuario_ai', type: 'string'},
+                    filters: {pfiltro: 'cnp.usuario_ai', type: 'string'},
                     id_grupo: 1,
                     grid: true,
                     form: false
@@ -267,27 +191,24 @@ header("content-type: text/javascript; charset=UTF-8");
                         }
                     },
                     type: 'DateField',
-                    filters: {pfiltro: 'mas.fecha_mod', type: 'date'},
+                    filters: {pfiltro: 'cnp.fecha_mod', type: 'date'},
                     id_grupo: 1,
                     grid: true,
                     form: false
                 }
             ],
             tam_pag: 50,
-            title: 'Mascota',
-            ActSave: '../../sis_condominio/control/Mascota/insertarMascota',
-            ActDel: '../../sis_condominio/control/Mascota/eliminarMascota',
-            ActList: '../../sis_condominio/control/Mascota/listarMascota',
-            id_store: 'id_mascota',
+            title: 'Contactos Propietario',
+            ActSave: '../../sis_condominio/control/ContactosPropietario/insertarContactosPropietario',
+            ActDel: '../../sis_condominio/control/ContactosPropietario/eliminarContactosPropietario',
+            ActList: '../../sis_condominio/control/ContactosPropietario/listarContactosPropietario',
+            id_store: 'id_contactos_propietario',
             fields: [
-                {name: 'id_mascota', type: 'numeric'},
+                {name: 'id_contactos_propietario', type: 'numeric'},
                 {name: 'estado_reg', type: 'string'},
                 {name: 'id_propietario', type: 'numeric'},
-                {name: 'nombre', type: 'string'},
-                {name: 'id_especie', type: 'numeric'},
-                {name: 'raza', type: 'string'},
-                {name: 'genero', type: 'string'},
-                {name: 'informacion_adicional', type: 'string'},
+                {name: 'tipo', type: 'string'},
+                {name: 'contacto', type: 'string'},
                 {name: 'id_usuario_reg', type: 'numeric'},
                 {name: 'fecha_reg', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
                 {name: 'id_usuario_ai', type: 'numeric'},
@@ -296,25 +217,16 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name: 'fecha_mod', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
                 {name: 'usr_reg', type: 'string'},
                 {name: 'usr_mod', type: 'string'},
-                {name: 'desc_especie', type: 'string'},
+
             ],
             sortInfo: {
-                field: 'id_mascota',
+                field: 'id_contactos_propietario',
                 direction: 'ASC'
             },
             bdel: true,
             bsave: false,
             fwidth: '50%',
             fheight: '25%',
-            onReloadPage: function (m) {
-                this.maestro = m;
-                this.store.baseParams = {id_propietario: this.maestro.id_propietario};
-                this.load({params: {start: 0, limit: 50}})
-            },
-            loadValoresIniciales: function () {
-                Phx.vista.Mascota.superclass.loadValoresIniciales.call(this);
-                this.Cmp.id_propietario.setValue(this.maestro.id_propietario);
-            },
         }
     )
 </script>

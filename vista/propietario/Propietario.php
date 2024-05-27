@@ -232,6 +232,35 @@ header("content-type: text/javascript; charset=UTF-8");
             this.initButtons = [this.cmbCondominio];
             this.idContenedor = config.idContenedor;
             Phx.vista.Propietario.superclass.constructor.call(this, config);
+
+            this.addButton('btm-contacto', {
+                text: 'Contactos',
+                iconCls: 'bsendmail',
+                disabled: false,
+                handler: () => this.loadWindow('Contactos', 'contactos_propietario/ContactosPropietario.php', 'ContactosPropietario'),
+                tooltip: '<b>Contactos</b>',
+                scope: this
+            });
+
+            this.addButton('btm-enfermedades', {
+                text: 'Enfermedades',
+                iconCls: 'bfolder',
+                disabled: false,
+                handler: () => this.loadWindow('Enfermedades', 'enfermedades_propietario/EnfermedadesPropietario.php', 'EnfermedadesPropietario'),
+                tooltip: '<b>Enfermedades</b>',
+                scope: this
+            });
+
+            this.addButton('btm-medicamentos', {
+                text: 'Medicamentos',
+                iconCls: 'bdocuments',
+                disabled: false,
+                handler: () => this.loadWindow('Medicamentos', 'medicamentos_propietario/MedicamentosPropietario.php', 'MedicamentosPropietario'),
+                tooltip: '<b>Medicamentos</b>',
+                scope: this
+            });
+
+
             this.cmbCondominio.on('select', function (combo, record, index) {
                 this.tmpCondominio = record.data.id_condominio;
                 this.capturaFiltros();
@@ -257,6 +286,35 @@ header("content-type: text/javascript; charset=UTF-8");
         },
         onButtonEdit: function () {
             Phx.vista.Propietario.superclass.onButtonEdit.call(this);
+        },
+        preparaMenu: function (n) {
+            Phx.vista.Propietario.superclass.preparaMenu.call(this, n);
+            this.getBoton('btm-contacto').enable();
+            this.getBoton('btm-enfermedades').enable();
+            this.getBoton('btm-medicamentos').enable();
+        },
+        liberaMenu: function () {
+            const tb = Phx.vista.Propietario.superclass.liberaMenu.call(this);
+            if (tb) {
+                this.getBoton('btm-contacto').disable();
+                this.getBoton('btm-enfermedades').disable();
+                this.getBoton('btm-medicamentos').disable();
+            }
+            return tb
+        },
+        loadWindow: function (title, url, cls) {
+            const rec = this.sm.getSelected();
+            Phx.CP.loadWindows(
+                `../../../sis_condominio/vista/${url}`,
+                title,
+                {
+                    width: '70%',
+                    height: 500
+                },
+                rec.data,
+                this.idContenedor,
+                cls
+            );
         },
         tabsouth: [
             {

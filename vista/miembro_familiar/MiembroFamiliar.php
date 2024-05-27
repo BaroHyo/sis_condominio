@@ -80,7 +80,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         mode: 'remote',
                         pageSize: 15,
                         queryDelay: 1000,
-                        anchor: '100%',
+                        anchor: '80%',
                         gwidth: 150,
                         minChars: 2,
                         renderer: function (value, p, record) {
@@ -299,6 +299,8 @@ header("content-type: text/javascript; charset=UTF-8");
             },
             bdel: true,
             bsave: false,
+            fwidth: '50%',
+            fheight: '25%',
             onReloadPage: function (m) {
                 this.maestro = m;
                 this.store.baseParams = {id_propietario: this.maestro.id_propietario};
