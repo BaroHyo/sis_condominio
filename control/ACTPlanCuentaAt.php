@@ -18,8 +18,16 @@ class ACTPlanCuentaAt extends ACTbase
     function listarPlanCuentaAt()
     {
         $this->objParam->defecto('ordenacion', 'id_plan_cuenta_at');
-
         $this->objParam->defecto('dir_ordenacion', 'asc');
+
+        if ($this->objParam->getParametro('sw_movimiento') == 'si') {
+            $this->objParam->addFiltro("plc.sw_transaccional = ''movimiento'' ");
+        }
+
+        if ($this->objParam->getParametro('sw_tipo') != '') {
+            $this->objParam->addFiltro("plc.tipo = ''" . $this->objParam->getParametro('sw_tipo') . "'' ");
+        }
+
         if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
             $this->objReporte = new Reporte($this->objParam, $this);
             $this->res = $this->objReporte->generarReporteListado('MODPlanCuentaAt', 'listarPlanCuentaAt');

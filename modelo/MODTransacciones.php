@@ -41,7 +41,14 @@ class MODTransacciones extends MODbase{
 		$this->captura('fecha_mod','timestamp');
 		$this->captura('usr_reg','varchar');
         $this->captura('usr_mod','varchar');
-        
+
+        $this->captura('id_periodo','int4');
+        $this->captura('fecha','date');
+        $this->captura('validar','varchar');
+        $this->captura('desc_condominio','varchar');
+        $this->captura('desc_cuenta','varchar');
+        $this->captura('desc_moneda','varchar');
+
         //Ejecuta la instruccion
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -64,6 +71,8 @@ class MODTransacciones extends MODbase{
 		$this->setParametro('tipo','tipo','varchar');
 		$this->setParametro('monto','monto','numeric');
 		$this->setParametro('concepto','concepto','text');
+		$this->setParametro('id_periodo','id_periodo','int4');
+		$this->setParametro('fecha','fecha','date');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -88,6 +97,7 @@ class MODTransacciones extends MODbase{
 		$this->setParametro('tipo','tipo','varchar');
 		$this->setParametro('monto','monto','numeric');
 		$this->setParametro('concepto','concepto','text');
+        $this->setParametro('fecha','fecha','date');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -103,6 +113,22 @@ class MODTransacciones extends MODbase{
         $this->transaccion='ATE_TRA_ELI';
         $this->tipo_procedimiento='IME';
                 
+        //Define los parametros para la funcion
+		$this->setParametro('id_transacciones','id_transacciones','int4');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
+    function cambiarRevision(){
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento='ate.ft_transacciones_ime';
+        $this->transaccion='ATE_TRA_VAL';
+        $this->tipo_procedimiento='IME';
+
         //Define los parametros para la funcion
 		$this->setParametro('id_transacciones','id_transacciones','int4');
 

@@ -42,6 +42,7 @@ class MODPlanCuentaAt extends MODbase
         $this->captura('usr_reg', 'varchar');
         $this->captura('usr_mod', 'varchar');
         $this->captura('id_condominio', 'int4');
+        $this->captura('sw_transaccional', 'varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();

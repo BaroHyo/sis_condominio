@@ -1,374 +1,111 @@
 <?php
-/****************************************************************************************
-*@package pXP
-*@file gen-SancionesPropietario.php
-*@author  (admin)
-*@date 27-05-2024 01:48:15
-*@description Archivo con la interfaz de usuario que permite la ejecucion de todas las funcionalidades del sistema
-
-HISTORIAL DE MODIFICACIONES:
-#ISSUE                FECHA                AUTOR                DESCRIPCION
- #0                27-05-2024 01:48:15    admin            Creacion    
- #   
-
-*******************************************************************************************/
-
+/**
+ * @package pXP
+ * @file Comunicado.php
+ * @author  MAM
+ * @date 27-12-2016 14:45
+ * @Interface para el inicio de solicitudes de materiales
+ */
 header("content-type: text/javascript; charset=UTF-8");
 ?>
-<script>
-Phx.vista.SancionesPropietario=Ext.extend(Phx.gridInterfaz,{
 
-    constructor:function(config){
-        this.maestro=config.maestro;
-        //llama al constructor de la clase padre
-        Phx.vista.SancionesPropietario.superclass.constructor.call(this,config);
-        this.init();
-        this.load({params:{start:0, limit:this.tam_pag}})
-    },
-            
-    Atributos:[
-        {
-            //configuracion del componente
-            config:{
-                    labelSeparator:'',
-                    inputType:'hidden',
-                    name: 'id_sanciones_propietario'
-            },
-            type:'Field',
-            form:true 
+<script>
+    Phx.vista.SancionesPropietario = {
+        require: '../../../sis_condominio/vista/sanciones_propietario/SancionesPropietarioBase.php', // direcion de la clase que va herrerar
+        requireclase: 'Phx.vista.SancionesPropietarioBase', // nombre de la calse
+        title: 'Sanciones Propietario', // nombre de interaz
+        nombreVista: 'SancionesPropietario',
+        bsave: false,
+        gruposBarraTareas: [
+            {name: 'borrador', title: '<h1 align="center"><i></i>Registrados</h1>', grupo: 0, height: 0},
+            {name: 'pendiente', title: '<h1 align="center"><i></i>Pendiente</h1>', grupo: 1, height: 0},
+            {name: 'pagado', title: '<h1 align="center"><i></i>Pagado</h1>', grupo: 2, height: 0}
+        ],
+        tam_pag: 50,
+        actualizarSegunTab: function (name, indice) {
+            if (this.finCons) {
+                this.store.baseParams.pes_estado = name;
+                this.load({params: {start: 0, limit: this.tam_pag}});
+            }
         },
-        {
-            config:{
-                name: 'estado_reg',
-                fieldLabel: 'Estado Reg.',
-                allowBlank: true,
-                anchor: '80%',
-                gwidth: 100,
-            	maxLength:10
-            },
-                type:'TextField',
-                filters:{pfiltro:'sap.estado_reg',type:'string'},
-                id_grupo:1,
-                grid:true,
-                form:false
-		},
-        {
-            config: {
-                name: 'id_propietario',
-                fieldLabel: 'id_propietario',
-                allowBlank: false,
-                emptyText: 'Elija una opción...',
-                store: new Ext.data.JsonStore({
-                    url: '../../sis_/control/Clase/Metodo',
-                    id: 'id_',
-                    root: 'datos',
-                    sortInfo: {
-                        field: 'nombre',
-                        direction: 'ASC'
-                    },
-                    totalProperty: 'total',
-                    fields: ['id_', 'nombre', 'codigo'],
-                    remoteSort: true,
-                    baseParams: {par_filtro: 'movtip.nombre#movtip.codigo'}
-                }),
-                valueField: 'id_',
-                displayField: 'nombre',
-                gdisplayField: 'desc_',
-                hiddenName: 'id_propietario',
-                forceSelection: true,
-                typeAhead: false,
-                triggerAction: 'all',
-                lazyRender: true,
-                mode: 'remote',
-                pageSize: 15,
-                queryDelay: 1000,
-                anchor: '100%',
-                gwidth: 150,
-                minChars: 2,
-                renderer : function(value, p, record) {
-                    return String.format('{0}', record.data['desc_']);
-                }
-            },
-            type: 'ComboBox',
-            id_grupo: 0,
-            filters: {pfiltro: 'movtip.nombre',type: 'string'},
-            grid: true,
-            form: true
+        bnewGroups: [0],
+        bactGroups: [0, 1, 2],
+        bdelGroups: [0],
+        beditGroups: [0],
+        bexcelGroups: [0, 1, 2],
+        constructor: function (config) {
+            this.idContenedor = config.idContenedor;
+            this.initButtons = [this.cmbCondominio];
+            Phx.vista.SancionesPropietario.superclass.constructor.call(this, config);
+            this.store.baseParams = {tipo_interfaz: this.nombreVista};
+            this.store.baseParams.pes_estado = 'borrador';
+            this.cmbCondominio.on('select', function (combo, record, index) {
+                this.tmpCondominio = record.data.id_condominio;
+                this.capturaFiltros();
+            }, this);
+            this.onInicarEvento()
         },
-        {
-            config: {
-                name: 'id_sancion',
-                fieldLabel: 'id_sancion',
-                allowBlank: false,
-                emptyText: 'Elija una opción...',
-                store: new Ext.data.JsonStore({
-                    url: '../../sis_/control/Clase/Metodo',
-                    id: 'id_',
-                    root: 'datos',
-                    sortInfo: {
-                        field: 'nombre',
-                        direction: 'ASC'
-                    },
-                    totalProperty: 'total',
-                    fields: ['id_', 'nombre', 'codigo'],
-                    remoteSort: true,
-                    baseParams: {par_filtro: 'movtip.nombre#movtip.codigo'}
-                }),
-                valueField: 'id_',
-                displayField: 'nombre',
-                gdisplayField: 'desc_',
-                hiddenName: 'id_sancion',
-                forceSelection: true,
-                typeAhead: false,
-                triggerAction: 'all',
-                lazyRender: true,
-                mode: 'remote',
-                pageSize: 15,
-                queryDelay: 1000,
-                anchor: '100%',
-                gwidth: 150,
-                minChars: 2,
-                renderer : function(value, p, record) {
-                    return String.format('{0}', record.data['desc_']);
-                }
-            },
-            type: 'ComboBox',
-            id_grupo: 0,
-            filters: {pfiltro: 'movtip.nombre',type: 'string'},
-            grid: true,
-            form: true
+        onInicarEvento: function () {
+            this.Cmp.id_sancion.on('select', function (combo, record, index) {
+                this.Cmp.importe.reset();
+                this.Cmp.id_moneda.reset();
+                this.Cmp.importe.setValue(record.data.importe_mb);
+                this.Cmp.id_moneda.setValue(record.data.id_moneda);
+                this.Cmp.id_moneda.setRawValue(record.data.desc_moneda);
+            }, this);
         },
-        {
-            config:{
-                name: 'fecha',
-                fieldLabel: 'fecha',
-                allowBlank: false,
-                anchor: '80%',
-                gwidth: 100,
-                            format: 'd/m/Y', 
-                            renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
-            },
-                type:'DateField',
-                filters:{pfiltro:'sap.fecha',type:'date'},
-                id_grupo:1,
-                grid:true,
-                form:true
-		},
-        {
-            config:{
-                name: 'justificacion',
-                fieldLabel: 'justificacion',
-                allowBlank: false,
-                anchor: '80%',
-                gwidth: 100,
-            	maxLength:-5
-            },
-                type:'TextField',
-                filters:{pfiltro:'sap.justificacion',type:'string'},
-                id_grupo:1,
-                grid:true,
-                form:true
-		},
-        {
-            config:{
-                name: 'importe',
-                fieldLabel: 'importe',
-                allowBlank: true,
-                anchor: '80%',
-                gwidth: 100,
-            	maxLength:655362
-            },
-                type:'NumberField',
-                filters:{pfiltro:'sap.importe',type:'numeric'},
-                id_grupo:1,
-                grid:true,
-                form:true
-		},
-        {
-            config: {
-                name: 'id_moneda',
-                fieldLabel: 'id_moneda',
-                allowBlank: false,
-                emptyText: 'Elija una opción...',
-                store: new Ext.data.JsonStore({
-                    url: '../../sis_/control/Clase/Metodo',
-                    id: 'id_',
-                    root: 'datos',
-                    sortInfo: {
-                        field: 'nombre',
-                        direction: 'ASC'
-                    },
-                    totalProperty: 'total',
-                    fields: ['id_', 'nombre', 'codigo'],
-                    remoteSort: true,
-                    baseParams: {par_filtro: 'movtip.nombre#movtip.codigo'}
-                }),
-                valueField: 'id_',
-                displayField: 'nombre',
-                gdisplayField: 'desc_',
-                hiddenName: 'id_moneda',
-                forceSelection: true,
-                typeAhead: false,
-                triggerAction: 'all',
-                lazyRender: true,
-                mode: 'remote',
-                pageSize: 15,
-                queryDelay: 1000,
-                anchor: '100%',
-                gwidth: 150,
-                minChars: 2,
-                renderer : function(value, p, record) {
-                    return String.format('{0}', record.data['desc_']);
-                }
-            },
-            type: 'ComboBox',
-            id_grupo: 0,
-            filters: {pfiltro: 'movtip.nombre',type: 'string'},
-            grid: true,
-            form: true
+        onButtonNew: function () {
+            if (!this.validarFiltros()) {
+                alert('Especifique el Condominio antes.')
+            } else {
+                Phx.vista.SancionesPropietario.superclass.onButtonNew.call(this);
+                this.Cmp.id_propietario.store.baseParams = Ext.apply(this.Cmp.id_propietario.store.baseParams, {id_condominio: this.cmbCondominio.getValue()});
+                this.Cmp.id_propietario.modificado = true;
+                this.Cmp.fecha.setValue(new Date());
+            }
         },
-        {
-            config:{
-                name: 'estado',
-                fieldLabel: 'estado',
-                allowBlank: true,
-                anchor: '80%',
-                gwidth: 100,
-            	maxLength:50
-            },
-                type:'TextField',
-                filters:{pfiltro:'sap.estado',type:'string'},
-                id_grupo:1,
-                grid:true,
-                form:true
-		},
-        {
-            config:{
-                name: 'usr_reg',
-                fieldLabel: 'Creado por',
-                allowBlank: true,
-                anchor: '80%',
-                gwidth: 100,
-            	maxLength:4
-            },
-                type:'Field',
-                filters:{pfiltro:'usu1.cuenta',type:'string'},
-                id_grupo:1,
-                grid:true,
-                form:false
-		},
-        {
-            config:{
-                name: 'fecha_reg',
-                fieldLabel: 'Fecha creación',
-                allowBlank: true,
-                anchor: '80%',
-                gwidth: 100,
-                            format: 'd/m/Y', 
-                            renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
-            },
-                type:'DateField',
-                filters:{pfiltro:'sap.fecha_reg',type:'date'},
-                id_grupo:1,
-                grid:true,
-                form:false
-		},
-        {
-            config:{
-                name: 'id_usuario_ai',
-                fieldLabel: 'Fecha creación',
-                allowBlank: true,
-                anchor: '80%',
-                gwidth: 100,
-            	maxLength:4
-            },
-                type:'Field',
-                filters:{pfiltro:'sap.id_usuario_ai',type:'numeric'},
-                id_grupo:1,
-                grid:false,
-                form:false
-		},
-        {
-            config:{
-                name: 'usuario_ai',
-                fieldLabel: 'Funcionaro AI',
-                allowBlank: true,
-                anchor: '80%',
-                gwidth: 100,
-            	maxLength:300
-            },
-                type:'TextField',
-                filters:{pfiltro:'sap.usuario_ai',type:'string'},
-                id_grupo:1,
-                grid:true,
-                form:false
-		},
-        {
-            config:{
-                name: 'usr_mod',
-                fieldLabel: 'Modificado por',
-                allowBlank: true,
-                anchor: '80%',
-                gwidth: 100,
-            	maxLength:4
-            },
-                type:'Field',
-                filters:{pfiltro:'usu2.cuenta',type:'string'},
-                id_grupo:1,
-                grid:true,
-                form:false
-		},
-        {
-            config:{
-                name: 'fecha_mod',
-                fieldLabel: 'Fecha Modif.',
-                allowBlank: true,
-                anchor: '80%',
-                gwidth: 100,
-                            format: 'd/m/Y', 
-                            renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
-            },
-                type:'DateField',
-                filters:{pfiltro:'sap.fecha_mod',type:'date'},
-                id_grupo:1,
-                grid:true,
-                form:false
-		}
-    ],
-    tam_pag:50,    
-    title:'Sanciones Propietario',
-    ActSave:'../../sis_condominio/control/SancionesPropietario/insertarSancionesPropietario',
-    ActDel:'../../sis_condominio/control/SancionesPropietario/eliminarSancionesPropietario',
-    ActList:'../../sis_condominio/control/SancionesPropietario/listarSancionesPropietario',
-    id_store:'id_sanciones_propietario',
-    fields: [
-		{name:'id_sanciones_propietario', type: 'numeric'},
-		{name:'estado_reg', type: 'string'},
-		{name:'id_propietario', type: 'numeric'},
-		{name:'id_sancion', type: 'numeric'},
-		{name:'fecha', type: 'date',dateFormat:'Y-m-d'},
-		{name:'justificacion', type: 'string'},
-		{name:'importe', type: 'numeric'},
-		{name:'id_moneda', type: 'numeric'},
-		{name:'estado', type: 'string'},
-		{name:'id_usuario_reg', type: 'numeric'},
-		{name:'fecha_reg', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
-		{name:'id_usuario_ai', type: 'numeric'},
-		{name:'usuario_ai', type: 'string'},
-		{name:'id_usuario_mod', type: 'numeric'},
-		{name:'fecha_mod', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
-		{name:'usr_reg', type: 'string'},
-		{name:'usr_mod', type: 'string'},
-        
-    ],
-    sortInfo:{
-        field: 'id_sanciones_propietario',
-        direction: 'ASC'
-    },
-    bdel:true,
-    bsave:true
-    }
-)
+        onButtonEdit: function () {
+            Phx.vista.SancionesPropietario.superclass.onButtonEdit.call(this);
+            this.Cmp.id_propietario.store.baseParams = Ext.apply(this.Cmp.id_propietario.store.baseParams, {id_condominio: this.cmbCondominio.getValue()});
+            this.Cmp.id_propietario.modificado = true;
+        },
+        validarFiltros: function () {
+            return !!(this.cmbCondominio.validate());
+        },
+        capturaFiltros: function (combo, record, index) {
+            if (this.validarFiltros()) {
+                this.store.baseParams.id_condominio = this.cmbCondominio.getValue();
+                this.load({params: {start: 0, limit: 50}});
+            }
+        },
+        cmbCondominio: new Ext.form.ComboBox({
+            fieldLabel: 'Condominio',
+            allowBlank: false,
+            emptyText: 'Seleccione un condominio...',
+            blankText: 'Condominio',
+            grupo: [0, 1, 2, 3, 4],
+            store: new Ext.data.JsonStore({
+                url: '../../sis_condominio/control/Condominio/listarCondominio',
+                id: 'id_condominio',
+                root: 'datos',
+                sortInfo: {
+                    field: 'nombre',
+                    direction: 'ASC'
+                },
+                totalProperty: 'total',
+                fields: ['id_condominio', 'codigo', 'nombre', 'direccion'],
+                remoteSort: true,
+                baseParams: {par_filtro: 'con.nombre'}
+            }),
+            valueField: 'id_condominio',
+            triggerAction: 'all',
+            displayField: 'nombre',
+            hiddenName: 'id_condominio',
+            mode: 'remote',
+            pageSize: 50,
+            queryDelay: 500,
+            listWidth: '280',
+            width: 280
+        }),
+    };
 </script>
-        
-        
